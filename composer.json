@@ -6,6 +6,8 @@
 	  "classmap": [
 		""
 	  ]
+	},
+	"require": {
+		"twig/twig": "^3.3"
 	}
-  
 }

@@ -2,6 +2,7 @@
 
 namespace Tools;
 
+use Test\Test;
 
 class Database
 {
@@ -12,9 +13,15 @@ class Database
     {
     }
 
-    public static function test()
+    public function test()
     {
         echo "Database";
+        \Test::test();
     }
 
+    public static function testStatic()
+    {
+        echo "Database";
+        \Test::test();
+    }
 }
