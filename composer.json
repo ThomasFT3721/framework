@@ -1,0 +1,11 @@
+{
+	"name": "framework/framework",
+	"type": "project",
+	"description": "The Framework.",
+	"autoload": {
+	  "classmap": [
+		""
+	  ]
+	}
+  
+}
