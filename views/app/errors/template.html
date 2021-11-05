@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="./assets/css/app/errors/template.css" />
+		<script src="./assets/js/framework.js"></script>
+		<script src="./assets/js/app/errors/index.js"></script>
+		<title>{{th.message}}</title>
+	</head>
+	<body>
+		<div id="errors">
+			<div class="header">
+				<div class="element active" id="stack_trace">Stack Trace</div>
+				<div class="element" id="request">Request</div>
+				<div class="element" id="preview">Preview</div>
+			</div>
+			<div class="content">
+				<div class="element active" id="content_stack_trace">
+					<div class="left">
+						{% for keyStep,step in traces %}
+						<div
+							class="step{% if keyStep == 0 %} active{% endif %}"
+							data-number="{{keyStep}}"
+						>
+							<div
+								class="file"
+								title="{{step.file}}:{{step.line}}"
+							>
+								{{step.file}}:{{step.line}}
+							</div>
+							<div
+								class="class"
+								title="{{step.class}}{{step.type}}{{step.function}}"
+							>
+								{{step.class}}{{step.type}}{{step.function}}
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+					<div class="right">
+						{% for keyStep,step in traces %}
+						<div
+							class="step{% if keyStep == 0 %} active{% endif %}"
+							data-number="{{keyStep}}"
+							id="step_{{keyStep}}"
+						>
+							<div class="top">
+								<div
+									class="file"
+									title="{{step.file}}:{{step.line}}"
+								>
+									{{step.file}}:{{step.line}}
+								</div>
+								<div
+									class="class"
+									title="{{step.class}}{{step.type}}{{step.function}}"
+								>
+									{{step.class}}{{step.type}}{{step.function}}
+								</div>
+							</div>
+							<div class="rows">
+								{% for rowNumber,row in step.fileContent %}
+								<div
+									class="
+										row{%
+										if
+										step.line
+										==
+										rowNumber+1
+										%}
+										active{%
+										endif
+										%}
+									"
+									data-number="{{rowNumber}}"
+								>
+									{{row|raw}}
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="element" id="content_request">
+					<div class="sections">
+						{% for row in request %} {{
+						include('request_section.html') }} {% endfor %}
+					</div>
+				</div>
+				<div class="element" id="content_preview">
+					{{preview}}
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

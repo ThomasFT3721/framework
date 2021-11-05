@@ -40,13 +40,14 @@ class ComposerStaticInit344fbbca0f5a90c07e7c8268222a0f36
 
     public static $classMap = array (
         'App\\Errors\\ErrorHandler' => __DIR__ . '/../..' . '/app/errors/ErrorHandler.php',
+        'App\\Views\\ViewsHandler' => __DIR__ . '/../..' . '/app/views/ViewHandler.php',
         'ComposerAutoloaderInit344fbbca0f5a90c07e7c8268222a0f36' => __DIR__ . '/..' . '/composer/autoload_real.php',
         'Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
         'Composer\\Autoload\\ComposerStaticInit344fbbca0f5a90c07e7c8268222a0f36' => __DIR__ . '/..' . '/composer/autoload_static.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
-        'Test\\Test' => __DIR__ . '/../..' . '/models/Erreur.php',
+        'Test\\Test' => __DIR__ . '/../..' . '/models/ErreurTest.php',
         'Tools\\Database' => __DIR__ . '/../..' . '/Database.php',
         'Twig\\Cache\\CacheInterface' => __DIR__ . '/..' . '/twig/twig/src/Cache/CacheInterface.php',
         'Twig\\Cache\\FilesystemCache' => __DIR__ . '/..' . '/twig/twig/src/Cache/FilesystemCache.php',

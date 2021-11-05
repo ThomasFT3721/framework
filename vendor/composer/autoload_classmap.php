@@ -7,13 +7,14 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Errors\\ErrorHandler' => $baseDir . '/app/errors/ErrorHandler.php',
+    'App\\Views\\ViewsHandler' => $baseDir . '/app/views/ViewHandler.php',
     'ComposerAutoloaderInit344fbbca0f5a90c07e7c8268222a0f36' => $vendorDir . '/composer/autoload_real.php',
     'Composer\\Autoload\\ClassLoader' => $vendorDir . '/composer/ClassLoader.php',
     'Composer\\Autoload\\ComposerStaticInit344fbbca0f5a90c07e7c8268222a0f36' => $vendorDir . '/composer/autoload_static.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Symfony\\Polyfill\\Ctype\\Ctype' => $vendorDir . '/symfony/polyfill-ctype/Ctype.php',
     'Symfony\\Polyfill\\Mbstring\\Mbstring' => $vendorDir . '/symfony/polyfill-mbstring/Mbstring.php',
-    'Test\\Test' => $baseDir . '/models/Erreur.php',
+    'Test\\Test' => $baseDir . '/models/ErreurTest.php',
     'Tools\\Database' => $baseDir . '/Database.php',
     'Twig\\Cache\\CacheInterface' => $vendorDir . '/twig/twig/src/Cache/CacheInterface.php',
     'Twig\\Cache\\FilesystemCache' => $vendorDir . '/twig/twig/src/Cache/FilesystemCache.php',

@@ -16,12 +16,12 @@ class Database
     public function test()
     {
         echo "Database";
-        \Test::test();
+        self::testStatic();
     }
 
     public static function testStatic()
     {
-        echo "Database";
+        echo "Database" . "deuyf";
         \Test::test();
     }
 }
