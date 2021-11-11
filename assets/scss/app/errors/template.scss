@@ -9,244 +9,312 @@ body {
         margin: 50px auto;
         padding: 0 50px;
 
-        & > .header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-            height: 40px;
-            padding: 3px;
-            background: $secondary;
+        & > .top {
+            margin-bottom: 50px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 30px 40px;
+            border: 1px solid $secondary10;
 
-            & > .element {
-                height: 34px;
-                text-align: center;
-                padding: 0 18px;
-                margin: 0 2px;
-                line-height: 34px;
-                border-radius: 4px;
-                color: $secondaryText;
-                cursor: pointer;
-
-                &:hover,
-                &.active {
-                    background: $primaryDark;
-                    color: $primaryDarkText;
-                }
-                &.active {
-                    cursor: default;
-                }
+            .message {
+                font-size: 24px;
+            }
+            .file {
+                margin-top: 16px;
+                font-size: 16px;
+                color: $secondary50;
             }
         }
-        & > .content {
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-            background: #fff;
-            padding: 4px 0;
-            & > .element {
-                display: none;
-                width: 100%;
 
-                &.active {
-                    display: block;
+        & > .bottom {
+            border: 1px solid $secondary10;
+            border-radius: 4px;
 
-                    &#content_stack_trace {
-                        display: grid;
+            & > .header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                height: 40px;
+                padding: 3px;
+                background: $secondary;
+
+                & > .element {
+                    height: 34px;
+                    text-align: center;
+                    padding: 0 18px;
+                    margin: 0 2px;
+                    line-height: 34px;
+                    border-radius: 4px;
+                    color: $secondaryText;
+                    cursor: pointer;
+                    user-select: none;
+
+                    &:hover,
+                    &.active {
+                        background: $primaryDark;
+                        color: $primaryDarkText;
+                    }
+                    &.active {
+                        cursor: default;
                     }
                 }
+            }
+            & > .content {
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
+                background: #fff;
+                & > .element {
+                    display: none;
+                    width: 100%;
+                    border-bottom-left-radius: 4px;
+                    border-bottom-right-radius: 4px;
+                    overflow: hidden;
 
-                &#content_stack_trace {
-                    grid-template-columns: 350px 1fr;
+                    &.active {
+                        display: block;
 
-                    & > .left {
-                        overflow-y: auto;
-                        overflow-x: hidden;
+                        &#content_stack_trace {
+                            display: grid;
+                        }
+                    }
 
-                        & > .step {
-                            position: relative;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: center;
-                            padding: 20px 10px 20px 50px;
-                            cursor: pointer;
+                    &#content_stack_trace {
+                        grid-template-columns: 350px 1fr;
 
-                            * {
-                                color: inherit;
+                        & > .left {
+                            overflow-y: auto;
+                            overflow-x: hidden;
+
+                            & > .step {
+                                position: relative;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                padding: 20px 10px 20px 50px;
+                                cursor: pointer;
+
+                                * {
+                                    color: inherit;
+                                }
+
+                                &::before {
+                                    content: attr(data-number);
+                                    position: absolute;
+                                    left: 0;
+                                    width: 50px;
+                                    text-align: center;
+                                }
+                                &::after {
+                                    content: "";
+                                    background: $secondary25;
+                                    height: 100%;
+                                    width: 2px;
+                                    position: absolute;
+                                    left: 50px;
+                                }
+
+                                &.active {
+                                    cursor: default;
+                                    background: $secondary10;
+
+                                    &::after {
+                                        background: $secondary75;
+                                    }
+                                }
+
+                                &:not(.active):hover {
+                                    &::after {
+                                        background: $secondary50;
+                                    }
+                                }
+
+                                & > div {
+                                    padding: 0 0 0 20px;
+                                    overflow: hidden;
+
+                                    &.class {
+                                        color: $primary50;
+                                    }
+                                }
                             }
+                        }
 
-                            &::before {
-                                content: attr(data-number);
-                                position: absolute;
-                                left: 0;
-                                width: 50px;
-                                text-align: center;
-                            }
-                            &::after {
-                                content: "";
-                                background: $secondary25;
+                        & > .right {
+                            & > .step {
+                                display: none;
+                                flex-direction: column;
+                                position: relative;
                                 height: 100%;
-                                width: 2px;
-                                position: absolute;
-                                left: 50px;
-                            }
 
-                            &.active {
-                                cursor: default;
-                                background: $secondary10;
-
-                                &::after {
-                                    background: $secondary75;
+                                &.active {
+                                    display: flex;
                                 }
-                            }
 
-                            &:not(.active):hover {
-                                &::after {
-                                    background: $secondary50;
+                                & > .top {
+                                    display: flex;
+                                    flex-direction: column-reverse;
+                                    justify-content: flex-end;
+                                    padding: 15px 10px 15px 20px;
+                                    height: 80px;
+                                    min-height: 80px;
+                                    max-height: 80px;
+
+                                    & > .class {
+                                        color: $primary50;
+                                        font-size: 16px;
+                                        height: 19px;
+                                    }
+                                    & > .file {
+                                        font-size: 18px;
+                                    }
                                 }
-                            }
 
-                            & > div {
-                                padding: 0 0 0 20px;
-                                overflow: hidden;
+                                & > .numbers {
+                                    position: absolute;
+                                    display: flex;
+                                    flex-direction: column;
+                                    top: 80px;
+                                    bottom: 0;
+                                    background: #353535;
+                                    padding: 12px 0;
 
-                                &.class {
-                                    color: $primary50;
+                                    & > .number {
+                                        position: relative;
+                                        height: 17px;
+                                        width: 40px;
+                                        padding: 0 12px;
+                                        user-select: none;
+                                        color: #fff;
+                                        text-align: end;
+
+                                        &::after {
+                                            content: "";
+                                            width: 1000px;
+                                            height: inherit;
+                                            position: absolute;
+                                            top: 0;
+                                        }
+
+                                        &.active,
+                                        &:hover {
+                                            background: $secondary50;
+
+                                            &::after {
+                                                background: $secondary25;
+                                            }
+                                        }
+
+                                        &.active {
+                                            &::after {
+                                                background: $secondary25;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                & > .rows {
+                                    display: flex;
+                                    flex-direction: column;
+                                    position: relative;
+                                    background: #1e1e1e;
+                                    padding: 12px 0 12px 44px;
+                                    height: 100%;
                                 }
                             }
                         }
                     }
 
-                    & > .right {
-                        & > .step {
-                            display: none;
+                    &#content_response {
+                        & > .rows {
+                            display: flex;
                             flex-direction: column;
+                            position: relative;
+                            background: #1e1e1e;
+                            padding: 12px 0;
 
-                            &.active {
-                                display: flex;
+                            &::before {
+                                content: "";
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 40px;
+                                height: 100%;
+                                background: #353535;
                             }
 
-                            & > .top {
-                                display: flex;
-                                flex-direction: column-reverse;
-                                justify-content: flex-end;
-                                padding: 15px 10px 15px 20px;
-                                height: 80px;
-
-                                & > .class {
-                                    color: $primary50;
-                                    font-size: 16px;
-                                    height: 19px;
-                                }
-                                &>.file {
-                                    font-size: 18px;
-                                }
-                            }
-
-                            & > .rows {
-                                display: flex;
-                                flex-direction: column;
+                            & > .row {
                                 position: relative;
-                                background: #1e1e1e;
-                                padding: 12px 0;
+                                display: flex;
+                                align-items: center;
+                                flex-wrap: wrap;
+                                padding-left: 44px;
+                                min-height: 20px;
+                                letter-spacing: 1px;
+                                color: #d4d4d4;
+
+                                * {
+                                    color: inherit;
+                                }
 
                                 &::before {
-                                    content: "";
+                                    content: attr(data-number);
                                     position: absolute;
-                                    top: 0;
                                     left: 0;
                                     width: 40px;
                                     height: 100%;
-                                    background: #353535;
+                                    text-align: center;
+                                    user-select: none;
+                                    color: #fff;
+                                    letter-spacing: 0;
                                 }
 
-                                & > .row {
-                                    position: relative;
-                                    display: flex;
-                                    align-items: center;
-                                    flex-wrap: wrap;
-                                    padding-left: 44px;
-                                    min-height: 20px;
-                                    letter-spacing: 1px;
-                                    color: #fff;
+                                &.active,
+                                &:hover {
+                                    background: $secondary25;
+                                }
 
-                                    * {
-                                        color: inherit;
-                                    }
-
+                                &.active {
                                     &::before {
-                                        content: attr(data-number);
-                                        position: absolute;
-                                        left: 0;
-                                        width: 40px;
-                                        height: 100%;
-                                        text-align: center;
-                                        user-select: none;
-                                        color: #fff;
-                                        letter-spacing: 0;
+                                        background: $secondary50;
                                     }
+                                }
 
-                                    &.active,
-                                    &:hover {
-                                        background: $secondary25;
-                                    }
-
-                                    &.active {
-                                        &::before {
-                                            background: $secondary50;
-                                        }
-                                    }
-
-                                    & .tab {
-                                        width: 30px;
-                                    }
-
-                                    & .keyword {
-                                        color: #569cd6;
-                                    }
-
-                                    & .utils {
-                                        color: #da70ca;
-                                    }
-
-                                    & .function {
-                                        color: #dcdcaa;
-                                    }
-                                    & .string {
-                                        color: #ce9178;
-                                    }
+                                & .tab {
+                                    width: 30px;
                                 }
                             }
                         }
                     }
-                }
 
-                & > .sections {
-                    & > .section {
-                        padding: 20px 30px;
+                    & > .sections {
+                        & > .section {
+                            padding: 20px 30px;
 
-                        & > .title {
-                            font-weight: bold;
-                        }
-
-                        & > .rows {
-                            display: grid;
-                            grid-template-columns: 230px 1fr;
-                            gap: 8px 24px;
-
-                            & > :nth-child(2n + 1) {
-                                text-align: end;
-                                font-weight: 100;
-                                color: $secondary50;
+                            & > .title {
+                                font-weight: bold;
                             }
 
-                            & > :nth-child(2n) {
-                                word-break: break-all;
-                            }
-                        }
+                            & > .rows {
+                                display: grid;
+                                grid-template-columns: 230px 1fr;
+                                gap: 8px 24px;
 
-                        &:not(:last-child) {
-                            border-bottom: 2px solid #{$secondary10};
+                                & > :nth-child(2n + 1) {
+                                    text-align: end;
+                                    font-weight: 100;
+                                    color: $secondary50;
+                                }
+
+                                & > :nth-child(2n) {
+                                    word-break: break-all;
+                                }
+                            }
+
+                            &:not(:last-child) {
+                                border-bottom: 2px solid #{$secondary10};
+                            }
                         }
                     }
                 }

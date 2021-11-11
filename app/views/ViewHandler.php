@@ -2,13 +2,18 @@
 
 namespace App\Views;
 
+use App\Routes\RouteMethod;
 use Twig\TwigFilter;
 use Twig\Environment;
+use App\Routes\Router;
+use Twig\TwigFunction;
 use Twig\Loader\FilesystemLoader;
+use App\Settings\EnvironmentVariables\EnvironmentVariable;
+use App\Settings\EnvironmentVariables\EnvironmentVariablesIdentifiers;
 
 class ViewsHandler
 {
-    public static function render(string $name, array $context = [], $base_file = "/app/base.twig")
+    public static function render(string $name, array $context = [], $base_file = "/app/base.html")
     {
         $twig = new Environment(
             new FilesystemLoader(
@@ -22,6 +27,7 @@ class ViewsHandler
                 //'cache' => ROOT_DIR . "/app/caches/twig",
             ]
         );
+
         self::addDefaultFilter($twig);
         if ($base_file !== null) {
             $context['_base_file'] = $twig->load($base_file);
@@ -32,5 +38,17 @@ class ViewsHandler
     private static function addDefaultFilter(Environment &$twig)
     {
         $twig->addFilter(new TwigFilter('html_entity_decode', 'html_entity_decode'));
+        $twig->addFunction(new TwigFunction('BASE_URL', function () {
+            return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL);
+        }));
+        $twig->addFunction(new TwigFunction('route', function (string $name, array $args = [], string $method = RouteMethod::GET) {
+            $routes = Router::getRoutes($method);
+            foreach ($routes as $route) {
+                if ($route->getOption('name') == $name) {
+                    return $route->getPathFormated($args);
+                }
+            }
+            throw new \Exception("Invalid route name");
+        }));
     }
 }

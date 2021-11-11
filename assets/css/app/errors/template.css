@@ -31,7 +31,26 @@ body #errors {
   margin: 50px auto;
   padding: 0 50px;
 }
-body #errors > .header {
+body #errors > .top {
+  margin-bottom: 50px;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 30px 40px;
+  border: 1px solid #3c6acd1a;
+}
+body #errors > .top .message {
+  font-size: 24px;
+}
+body #errors > .top .file {
+  margin-top: 16px;
+  font-size: 16px;
+  color: #3c6acd88;
+}
+body #errors > .bottom {
+  border: 1px solid #3c6acd1a;
+  border-radius: 4px;
+}
+body #errors > .bottom > .header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,7 +60,7 @@ body #errors > .header {
   padding: 3px;
   background: #3c6acd;
 }
-body #errors > .header > .element {
+body #errors > .bottom > .header > .element {
   height: 34px;
   text-align: center;
   padding: 0 18px;
@@ -50,38 +69,41 @@ body #errors > .header > .element {
   border-radius: 4px;
   color: #ffffff;
   cursor: pointer;
+  user-select: none;
 }
-body #errors > .header > .element:hover, body #errors > .header > .element.active {
+body #errors > .bottom > .header > .element:hover, body #errors > .bottom > .header > .element.active {
   background: #133e99;
   color: #ffffff;
 }
-body #errors > .header > .element.active {
+body #errors > .bottom > .header > .element.active {
   cursor: default;
 }
-body #errors > .content {
+body #errors > .bottom > .content {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   background: #fff;
-  padding: 4px 0;
 }
-body #errors > .content > .element {
+body #errors > .bottom > .content > .element {
   display: none;
   width: 100%;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  overflow: hidden;
 }
-body #errors > .content > .element.active {
+body #errors > .bottom > .content > .element.active {
   display: block;
 }
-body #errors > .content > .element.active#content_stack_trace {
+body #errors > .bottom > .content > .element.active#content_stack_trace {
   display: grid;
 }
-body #errors > .content > .element#content_stack_trace {
+body #errors > .bottom > .content > .element#content_stack_trace {
   grid-template-columns: 350px 1fr;
 }
-body #errors > .content > .element#content_stack_trace > .left {
+body #errors > .bottom > .content > .element#content_stack_trace > .left {
   overflow-y: auto;
   overflow-x: hidden;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -89,17 +111,17 @@ body #errors > .content > .element#content_stack_trace > .left > .step {
   padding: 20px 10px 20px 50px;
   cursor: pointer;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step * {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step * {
   color: inherit;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step::before {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step::before {
   content: attr(data-number);
   position: absolute;
   left: 0;
   width: 50px;
   text-align: center;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step::after {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step::after {
   content: "";
   background: #3c6acd44;
   height: 100%;
@@ -107,53 +129,99 @@ body #errors > .content > .element#content_stack_trace > .left > .step::after {
   position: absolute;
   left: 50px;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step.active {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step.active {
   cursor: default;
   background: #3c6acd1a;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step.active::after {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step.active::after {
   background: #3c6acdbb;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step:not(.active):hover::after {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step:not(.active):hover::after {
   background: #3c6acd88;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step > div {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step > div {
   padding: 0 0 0 20px;
   overflow: hidden;
 }
-body #errors > .content > .element#content_stack_trace > .left > .step > div.class {
+body #errors > .bottom > .content > .element#content_stack_trace > .left > .step > div.class {
   color: #2b6eff88;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step {
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step {
   display: none;
   flex-direction: column;
+  position: relative;
+  height: 100%;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step.active {
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step.active {
   display: flex;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .top {
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .top {
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
   padding: 15px 10px 15px 20px;
   height: 80px;
+  min-height: 80px;
+  max-height: 80px;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .top > .class {
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .top > .class {
   color: #2b6eff88;
   font-size: 16px;
   height: 19px;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .top > .file {
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .top > .file {
   font-size: 18px;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows {
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 80px;
+  bottom: 0;
+  background: #353535;
+  padding: 12px 0;
+}
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers > .number {
+  position: relative;
+  height: 17px;
+  width: 40px;
+  padding: 0 12px;
+  user-select: none;
+  color: #fff;
+  text-align: end;
+}
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers > .number::after {
+  content: "";
+  width: 1000px;
+  height: inherit;
+  position: absolute;
+  top: 0;
+}
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers > .number.active, body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers > .number:hover {
+  background: #3c6acd88;
+}
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers > .number.active::after, body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers > .number:hover::after {
+  background: #3c6acd44;
+}
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .numbers > .number.active::after {
+  background: #3c6acd44;
+}
+body #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .rows {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #1e1e1e;
+  padding: 12px 0 12px 44px;
+  height: 100%;
+}
+body #errors > .bottom > .content > .element#content_response > .rows {
   display: flex;
   flex-direction: column;
   position: relative;
   background: #1e1e1e;
   padding: 12px 0;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows::before {
+body #errors > .bottom > .content > .element#content_response > .rows::before {
   content: "";
   position: absolute;
   top: 0;
@@ -162,7 +230,7 @@ body #errors > .content > .element#content_stack_trace > .right > .step > .rows:
   height: 100%;
   background: #353535;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row {
+body #errors > .bottom > .content > .element#content_response > .rows > .row {
   position: relative;
   display: flex;
   align-items: center;
@@ -170,12 +238,12 @@ body #errors > .content > .element#content_stack_trace > .right > .step > .rows 
   padding-left: 44px;
   min-height: 20px;
   letter-spacing: 1px;
-  color: #fff;
+  color: #d4d4d4;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row * {
+body #errors > .bottom > .content > .element#content_response > .rows > .row * {
   color: inherit;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row::before {
+body #errors > .bottom > .content > .element#content_response > .rows > .row::before {
   content: attr(data-number);
   position: absolute;
   left: 0;
@@ -186,47 +254,35 @@ body #errors > .content > .element#content_stack_trace > .right > .step > .rows 
   color: #fff;
   letter-spacing: 0;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row.active, body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row:hover {
+body #errors > .bottom > .content > .element#content_response > .rows > .row.active, body #errors > .bottom > .content > .element#content_response > .rows > .row:hover {
   background: #3c6acd44;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row.active::before {
+body #errors > .bottom > .content > .element#content_response > .rows > .row.active::before {
   background: #3c6acd88;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row .tab {
+body #errors > .bottom > .content > .element#content_response > .rows > .row .tab {
   width: 30px;
 }
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row .keyword {
-  color: #569cd6;
-}
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row .utils {
-  color: #da70ca;
-}
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row .function {
-  color: #dcdcaa;
-}
-body #errors > .content > .element#content_stack_trace > .right > .step > .rows > .row .string {
-  color: #ce9178;
-}
-body #errors > .content > .element > .sections > .section {
+body #errors > .bottom > .content > .element > .sections > .section {
   padding: 20px 30px;
 }
-body #errors > .content > .element > .sections > .section > .title {
+body #errors > .bottom > .content > .element > .sections > .section > .title {
   font-weight: bold;
 }
-body #errors > .content > .element > .sections > .section > .rows {
+body #errors > .bottom > .content > .element > .sections > .section > .rows {
   display: grid;
   grid-template-columns: 230px 1fr;
   gap: 8px 24px;
 }
-body #errors > .content > .element > .sections > .section > .rows > :nth-child(2n+1) {
+body #errors > .bottom > .content > .element > .sections > .section > .rows > :nth-child(2n+1) {
   text-align: end;
   font-weight: 100;
   color: #3c6acd88;
 }
-body #errors > .content > .element > .sections > .section > .rows > :nth-child(2n) {
+body #errors > .bottom > .content > .element > .sections > .section > .rows > :nth-child(2n) {
   word-break: break-all;
 }
-body #errors > .content > .element > .sections > .section:not(:last-child) {
+body #errors > .bottom > .content > .element > .sections > .section:not(:last-child) {
   border-bottom: 2px solid #3c6acd1a;
 }
 

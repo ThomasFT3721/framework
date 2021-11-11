@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="style.css" />
+		{% block style %}{% endblock %}
+		<title>{% block title %}Title Page {% endblock %}</title>
+	</head>
+	<body>
+		{% block before_app %}{% endblock %}
+		<div id="app">{% block app %}{% endblock %}</div>
+		{% block after_app %}{% endblock %}
+		<script type="text/javascript">
+			document.addEventListener("DOMContentLoaded", function () {
+				console.log(
+					document.querySelectorAll("#left-area > ul > li > a > img")
+				);
+			});
+		</script>
+	</body>
+</html>
