@@ -20,9 +20,9 @@ class ViewsHandler
         $twig = new Environment(
             new FilesystemLoader(
                 [
-                    App::$path."/views",
-                    App::$path."/views/app",
-                    App::$path."/views/app/errors"
+                    __FILE__.'/../views',
+                    __FILE__.'/../views',
+                    __FILE__.'/../views'
                 ]
             ),
             [
