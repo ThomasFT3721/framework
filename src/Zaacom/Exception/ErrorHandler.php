@@ -99,7 +99,7 @@ class ErrorHandler
             ]
         ];
 
-        ViewsHandler::render('/app/errors/template.html', [
+        ViewsHandler::render('/templates/errors/template.html', [
             "th" => $th,
             "traces" => $traces,
             "request" => $request,
