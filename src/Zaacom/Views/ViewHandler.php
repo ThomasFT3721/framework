@@ -15,7 +15,7 @@ use Zaacom\Routing\Router;
 
 class ViewsHandler
 {
-    public static function render(string $name, array $context = [], $base_file = "/templates/base.html")
+    public static function render(string $name, array $context = [], $base_file = "base.html")
     {
         $twig = new Environment(
             new FilesystemLoader(
