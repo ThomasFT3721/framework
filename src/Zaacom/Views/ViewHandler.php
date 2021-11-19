@@ -22,6 +22,7 @@ class ViewsHandler
                 [
                     __DIR__.'/templates',
                     __DIR__.'/templates/errors',
+                    App::$path.'/src/app/views'
                 ]
             ),
             [
