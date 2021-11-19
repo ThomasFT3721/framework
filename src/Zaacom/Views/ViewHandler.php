@@ -20,8 +20,8 @@ class ViewsHandler
         $twig = new Environment(
             new FilesystemLoader(
                 [
-                    __FILE__.'../templates',
-                    __FILE__.'../templates/error',
+                    dirname(getcwd()).'/templates',
+                    dirname(getcwd()).'/templates/error',
                 ]
             ),
             [
