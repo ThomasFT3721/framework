@@ -21,7 +21,7 @@ class ViewsHandler
             new FilesystemLoader(
                 [
                     __DIR__.'/templates',
-                    __DIR__.'../templates/error',
+                    __DIR__.'../templates/errors',
                 ]
             ),
             [
