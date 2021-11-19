@@ -10,6 +10,7 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Zaacom\Environment\EnvironmentVariable;
 use Zaacom\Environment\EnvironmentVariablesIdentifiers;
+use Zaacom\Foundation\App;
 use Zaacom\Routing\Router;
 
 class ViewsHandler
@@ -19,9 +20,9 @@ class ViewsHandler
         $twig = new Environment(
             new FilesystemLoader(
                 [
-                    ROOT_DIR . "/views",
-                    ROOT_DIR . "/views/app",
-                    ROOT_DIR . "/views/app/errors"
+                    App::$path."/views",
+                    App::$path."/views/app",
+                    App::$path."/views/app/errors"
                 ]
             ),
             [
