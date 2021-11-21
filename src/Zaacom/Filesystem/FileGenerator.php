@@ -38,9 +38,20 @@ class FileGenerator
      * 
      * @return  self
      */
-    public function addContentLine(string $row)
+    public function addContentLine(string $row, int $indent = 0)
     {
-        $this->content .= $row . "\n";
+        $this->content .= $this->getIndent($indent) . $row . "\n";
+
+        return $this;
+    }
+    /**
+     * Add a blank line to the file content
+     * 
+     * @return  self
+     */
+    public function addBlankLine(): self
+    {
+        $this->content .= "\n";
 
         return $this;
     }
@@ -69,29 +80,41 @@ class FileGenerator
         return $this;
     }
 
-    public function generate(bool $return = false)
+    /**
+     * Generate file with content
+     * 
+     * @return bool true if file is created successfully, else false
+     */
+    public function generate()
     {
 
-        if ((!empty($this->basePath) || !empty($this->path)) && !is_dir(ROOT_DIR . $this->basePath . $this->path)) {
-            if (mkdir(ROOT_DIR . $this->basePath . $this->path, 0777, true) === false) {
-                throw new \Exception(ROOT_DIR . $this->basePath . $this->path);
+        if ((!empty($this->basePath) || !empty($this->path)) && !is_dir(\Zaacom\Foundation\App::$path . $this->basePath . $this->path)) {
+            if (mkdir(\Zaacom\Foundation\App::$path . $this->basePath . $this->path, 0777, true) === false) {
+                throw new \Exception(\Zaacom\Foundation\App::$path . $this->basePath . $this->path);
             }
         }
 
-        $result = file_put_contents(ROOT_DIR . $this->basePath . $this->path . "/" . $this->filename, $this->content);
+        $result = file_put_contents(\Zaacom\Foundation\App::$path . $this->basePath . $this->path . "/" . $this->filename, $this->content);
 
         if ($result === false) {
             throw new \Exception("b");
         }
 
-        if ($return) {
-            return $this;
+        return $result !== false;
+    }
+
+    private function getIndent(int $indent)
+    {
+        $res = "";
+        for ($i = 0; $i < $indent; $i++) {
+            $res .= "    ";
         }
+        return $res;
     }
 
     /**
      * Get the value of basePath
-     */ 
+     */
     public function getBasePath()
     {
         return $this->basePath;

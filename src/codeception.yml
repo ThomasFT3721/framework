@@ -4,6 +4,7 @@ paths:
   data: tests/_data
   support: tests/_support
   envs: tests/_envs
+  log: tests/logs
 actor_suffix: Tester
 bootstrap: bootstrap.php
 tools:

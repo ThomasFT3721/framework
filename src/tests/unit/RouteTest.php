@@ -18,6 +18,6 @@ class RouteTest extends \Codeception\Test\Unit
     // tests
     public function testSomeFeature()
     {
-
+        $this->tester->assertEquals(1, 1);
     }
 }
