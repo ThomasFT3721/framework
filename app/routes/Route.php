@@ -20,14 +20,24 @@ class Route
     }
 
 
-    public static function get(string $path, array|string $action, array $options = [])
+    public static function get(array|string $path, array|string $action, array $options = [])
     {
-        return Router::add(RouteMethod::GET, $path, $action, $options);
+        if (gettype($path) == 'string') {
+            $path = [$path];
+        }
+        foreach ($path as $p) {
+            return Router::add(RouteMethod::GET, $p, $action, $options);
+        }
     }
 
-    public static function post(string $path, array|string $action, array $options = [])
+    public static function post(array|string $path, array|string $action, array $options = [])
     {
-        return Router::add(RouteMethod::POST, $path, $action, $options);
+        if (gettype($path) == 'string') {
+            $path = [$path];
+        }
+        foreach ($path as $p) {
+            return Router::add(RouteMethod::POST, $p, $action, $options);
+        }
     }
 
     /**

@@ -38,9 +38,20 @@ class FileGenerator
      * 
      * @return  self
      */
-    public function addContentLine(string $row)
+    public function addContentLine(string $row, int $indent = 0)
     {
-        $this->content .= $row . "\n";
+        $this->content .= $this->getIndent($indent) . $row . "\n";
+
+        return $this;
+    }
+    /**
+     * Add a blank line to the file content
+     * 
+     * @return  self
+     */
+    public function addBlankLine(): self
+    {
+        $this->content .= "\n";
 
         return $this;
     }
@@ -69,7 +80,12 @@ class FileGenerator
         return $this;
     }
 
-    public function generate(bool $return = false)
+    /**
+     * Generate file with content
+     * 
+     * @return bool true if file is created successfully, else false
+     */
+    public function generate()
     {
 
         if ((!empty($this->basePath) || !empty($this->path)) && !is_dir(ROOT_DIR . $this->basePath . $this->path)) {
@@ -84,14 +100,21 @@ class FileGenerator
             throw new \Exception("b");
         }
 
-        if ($return) {
-            return $this;
+        return $result !== false;
+    }
+
+    private function getIndent(int $indent)
+    {
+        $res = "";
+        for ($i = 0; $i < $indent; $i++) {
+            $res .= "    ";
         }
+        return $res;
     }
 
     /**
      * Get the value of basePath
-     */ 
+     */
     public function getBasePath()
     {
         return $this->basePath;

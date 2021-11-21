@@ -28,16 +28,19 @@ class ViewsHandler
             ]
         );
 
-        self::addDefaultFilter($twig);
+        self::addDefaultTools($twig);
         if ($base_file !== null) {
             $context['_base_file'] = $twig->load($base_file);
         }
         echo $twig->display($name, $context);
     }
 
-    private static function addDefaultFilter(Environment &$twig)
+    private static function addDefaultTools(Environment &$twig)
     {
         $twig->addFilter(new TwigFilter('html_entity_decode', 'html_entity_decode'));
+        $twig->addFilter(new TwigFilter('json_encode', "json_encode"));
+
+
         $twig->addFunction(new TwigFunction('BASE_URL', function () {
             return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL);
         }));

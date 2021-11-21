@@ -1,5 +1,83 @@
-message: {{message}}</br>
-
-{{route("test")}}<br>
-{{route("blabla", {bcd:234})}}<br>
-{{route("boum", {bcd:234, def:456})}}<br>
+<table>
+    {% for keyA,valueA in data %}
+    <tr>
+        <td>{{keyA}}</td>
+        <td>
+            {% if valueA is iterable %}
+            <table>
+                {% for keyB,valueB in valueA %}
+                <tr>
+                    <td>{{keyB}}</td>
+                    <td>
+                        {% if valueB is iterable %}
+                        <table>
+                            {% for keyC,valueC in valueB %}
+                            <tr>
+                                <td>{{keyC}}</td>
+                                <td>
+                                    {% if valueC is iterable %}
+                                    <table>
+                                        {% for keyD,valueD in valueC %}
+                                        <tr>
+                                            <td>{{keyD}}</td>
+                                            <td>
+                                                {% if valueD is iterable %}
+                                                <table>
+                                                    {% for keyE,valueE in valueD %}
+                                                    <tr>
+                                                        <td>{{keyE}}</td>
+                                                        <td>
+                                                            {% if valueE is iterable %}
+                                                            <table>
+                                                                {% for keyF,valueF in valueD %}
+                                                                <tr>
+                                                                    <td>{{keyF}}</td>
+                                                                    <td>
+                                                                        {% if valueF is iterable %}
+                                                                        <table>
+                                                                            {% for keyG,valueG in valueF %}
+                                                                            <tr>
+                                                                                <td>{{keyG}}</td>
+                                                                                <td>{{valueG|json_encode}}</td>
+                                                                            </tr>
+                                                                            {% endfor %}
+                                                                        </table>
+                                                                        {% else %} {{valueF|json_encode}} {% endif %}
+                                                                    </td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </table>
+                                                            {% else %} {{valueE|json_encode}} {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </table>
+                                                {% else %} {{valueD|json_encode}} {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                    {% else %} {{valueC|json_encode}} {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% else %} {{valueB|json_encode}} {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %} {{valueA|json_encode}} {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<style>
+    table {
+        border-collapse: collapse;
+    }
+    table td {
+        border: 1px solid #000;
+        padding: 8px 12px;
+    }
+</style>

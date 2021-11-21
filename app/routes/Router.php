@@ -50,7 +50,12 @@ abstract class Router
         if (count($route->getAction()) != 2) {
             throw new \Exception("Invalid number of parameters for the action");
         }
-        call_user_func_array([new ($route->getAction()[0]), $route->getAction()[1]], $params);
+
+        $res = call_user_func_array([new ($route->getAction()[0]), $route->getAction()[1]], $params);
+
+        if ($res !== null) {
+            echo $res;
+        }
     }
 
     private static function matchWith(Route $route)
