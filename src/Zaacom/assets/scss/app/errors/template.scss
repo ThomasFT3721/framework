@@ -1,0 +1,403 @@
+@import "../base";
+
+body {
+    background: #eeeef5;
+    $widthBlockError: 1300px;
+    $widthBlockErrorLeft: 350px;
+    $widthBlockErrorRight: $widthBlockError - $widthBlockErrorLeft;
+    #errors {
+        width: $widthBlockError;
+        margin: 50px auto;
+
+        & > .top {
+            margin-bottom: 50px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 30px 40px;
+            border: 1px solid $secondary10;
+
+            .message {
+                font-size: 24px;
+            }
+            .file {
+                margin-top: 16px;
+                font-size: 16px;
+                color: $secondary50;
+            }
+        }
+
+        & > .bottom {
+            border: 1px solid $secondary10;
+            border-radius: 4px;
+
+            & > .header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                height: 40px;
+                padding: 3px;
+                background: $secondary;
+
+                & > .element {
+                    height: 34px;
+                    text-align: center;
+                    padding: 0 18px;
+                    margin: 0 2px;
+                    line-height: 34px;
+                    border-radius: 4px;
+                    color: $secondaryText;
+                    cursor: pointer;
+                    user-select: none;
+
+                    &:hover,
+                    &.active {
+                        background: $primaryDark;
+                        color: $primaryDarkText;
+                    }
+                    &.active {
+                        cursor: default;
+                    }
+                }
+            }
+            & > .content {
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
+                background: #fff;
+                & > .element {
+                    display: none;
+                    width: 100%;
+                    border-bottom-left-radius: 4px;
+                    border-bottom-right-radius: 4px;
+                    overflow: hidden;
+
+                    &.active {
+                        display: block;
+
+                        &#content_stack_trace {
+                            display: grid;
+                        }
+                    }
+
+                    &#content_stack_trace {
+                        grid-template-columns: $widthBlockErrorLeft $widthBlockErrorRight;
+
+                        & > .left {
+                            overflow-y: auto;
+                            overflow-x: hidden;
+
+                            & > .step {
+                                position: relative;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                padding: 20px 10px 20px 50px;
+                                cursor: pointer;
+
+                                * {
+                                    color: inherit;
+                                }
+
+                                &::before {
+                                    content: attr(data-number);
+                                    position: absolute;
+                                    left: 0;
+                                    width: 50px;
+                                    text-align: center;
+                                }
+                                &::after {
+                                    content: "";
+                                    background: $secondary25;
+                                    height: 100%;
+                                    width: 2px;
+                                    position: absolute;
+                                    left: 50px;
+                                }
+
+                                &.active {
+                                    cursor: default;
+                                    background: $secondary10;
+
+                                    &::after {
+                                        background: $secondary75;
+                                    }
+                                }
+
+                                &:not(.active):hover {
+                                    &::after {
+                                        background: $secondary50;
+                                    }
+                                }
+
+                                & > div {
+                                    padding: 0 0 0 20px;
+                                    overflow: hidden;
+
+                                    &.class {
+                                        color: $primary50;
+                                    }
+                                }
+                            }
+                        }
+
+                        & > .right {
+                            width: $widthBlockErrorRight;
+                            & > .step {
+                                display: none;
+                                flex-direction: column;
+                                position: relative;
+                                height: 100%;
+                                width: $widthBlockErrorRight;
+
+                                &.active {
+                                    display: flex;
+                                }
+
+                                & > .top {
+                                    display: flex;
+                                    flex-direction: column-reverse;
+                                    justify-content: flex-end;
+                                    padding: 15px 10px 15px 20px;
+                                    height: 80px;
+                                    min-height: 80px;
+                                    max-height: 80px;
+
+                                    & > .class {
+                                        color: $primary50;
+                                        font-size: 16px;
+                                        height: 19px;
+                                    }
+                                    & > .file {
+                                        font-size: 18px;
+                                    }
+                                }
+
+                                & > .numbers {
+                                    position: absolute;
+                                    display: flex;
+                                    flex-direction: column;
+                                    top: 80px;
+                                    bottom: 0;
+                                    background: #353535;
+                                    padding: 12px 0;
+
+                                    & > .number {
+                                        position: relative;
+                                        height: 17px;
+                                        max-height: 17px;
+                                        min-height: 17px;
+                                        font-size: 13px;
+                                        width: 40px;
+                                        padding: 0 12px;
+                                        user-select: none;
+                                        color: #fff;
+                                        text-align: end;
+
+                                        &::after {
+                                            content: "";
+                                            width: 1000px;
+                                            height: 17px;
+                                            max-height: 17px;
+                                            min-height: 17px;
+                                            position: absolute;
+                                            top: 0;
+                                        }
+
+                                        &.active,
+                                        &:hover {
+                                            background: $secondary50;
+
+                                            &::after {
+                                                background: $secondary25;
+                                            }
+                                        }
+
+                                        &.active {
+                                            &::after {
+                                                background: $secondary25;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                & > .rows {
+                                    display: flex;
+                                    flex-direction: column;
+                                    position: relative;
+                                    background: #1e1e1e;
+                                    padding: 12px 0;
+                                    height: 100%;
+                                    width: $widthBlockErrorRight;
+                                    overflow-x: auto;
+                                    overflow-y: hidden;
+
+                                    & > .row {
+                                        color: #d4d4d4;
+                                        white-space: nowrap;
+                                        word-break: keep-all;
+                                        width: -webkit-fit-content;
+                                        height: 17px;
+                                        display: flex;
+                                        flex-direction: row;
+                                        align-items: center;
+                                        justify-content: flex-start;
+                                        padding-left: 44px;
+                                        padding-right: 20px;
+                                        font-family: JetBrainsMono !important;
+
+                                        * {
+                                            font-family: JetBrainsMono !important;
+                                        }
+
+                                        & .tab {
+                                            width: 30px;
+                                        }
+
+                                        & .class {
+                                            color: #00ccaf;
+                                        }
+
+                                        & .keyword {
+                                            color: #569cd6;
+                                            * {
+                                                color: #569cd6 !important;
+                                            }
+                                        }
+
+                                        & .utils {
+                                            color: #da70ca;
+                                        }
+
+                                        & .number {
+                                            color: #aecea3;
+                                        }
+
+                                        & .function {
+                                            color: #dbdba3;
+                                            * {
+                                                color: #dbdba3 !important;
+                                            }
+                                        }
+                                        & .variable {
+                                            color: #88deff;
+                                            * {
+                                                color: #88deff !important;
+                                            }
+                                        }
+                                        & .string {
+                                            color: #ce9178;
+
+                                            *:not(.variable) {
+                                                color: #ce9178 !important;
+                                            }
+                                        }
+                                        & .comment {
+                                            color: #5d9b4c;
+
+                                            * {
+                                                color: #5d9b4c !important;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    &#content_response {
+                        & > .rows {
+                            display: flex;
+                            flex-direction: column;
+                            position: relative;
+                            background: #1e1e1e;
+                            padding: 12px 0;
+
+                            &::before {
+                                content: "";
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 40px;
+                                height: 100%;
+                                background: #353535;
+                            }
+
+                            & > .row {
+                                position: relative;
+                                display: flex;
+                                align-items: center;
+                                flex-wrap: wrap;
+                                padding-left: 44px;
+                                min-height: 20px;
+                                letter-spacing: 1px;
+                                color: #d4d4d4;
+
+                                * {
+                                    color: inherit;
+                                }
+
+                                &::before {
+                                    content: attr(data-number);
+                                    position: absolute;
+                                    left: 0;
+                                    width: 40px;
+                                    height: 100%;
+                                    text-align: center;
+                                    user-select: none;
+                                    color: #fff;
+                                    letter-spacing: 0;
+                                }
+
+                                &.active,
+                                &:hover {
+                                    background: $secondary25;
+                                }
+
+                                &.active {
+                                    &::before {
+                                        background: $secondary50;
+                                    }
+                                }
+
+                                & .tab {
+                                    width: 30px;
+                                }
+                            }
+                        }
+                    }
+
+                    & > .sections {
+                        & > .section {
+                            padding: 20px 30px;
+
+                            & > .title {
+                                font-weight: bold;
+                            }
+
+                            & > .rows {
+                                display: grid;
+                                grid-template-columns: 230px 1fr;
+                                gap: 8px 24px;
+
+                                & > :nth-child(2n + 1) {
+                                    text-align: end;
+                                    font-weight: 100;
+                                    color: $secondary50;
+                                }
+
+                                & > :nth-child(2n) {
+                                    word-break: break-all;
+                                }
+                            }
+
+                            &:not(:last-child) {
+                                border-bottom: 2px solid #{$secondary10};
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+table {
+    border-collapse: collapse;
+    border: 1px solid $secondary10;
+
+    tr {
+        &:not(:last-child) {
+            border-bottom: 1px solid $secondary10;
+        }
+    }
+
+    & > thead {
+        & > tr {
+            & > th {
+                font-weight: bold;
+                padding: 10px 16px;
+                text-align: center;
+                background: $secondary;
+                color: $primaryText;
+            }
+        }
+    }
+
+    & > tbody {
+        & > tr {
+            &:hover {
+                & > td {
+                    background-color: #00000010;
+                }
+            }
+
+            & > td {
+                padding: 10px 16px;
+                text-align: center;
+            }
+        }
+    }
+}

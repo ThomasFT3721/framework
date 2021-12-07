@@ -1,0 +1,144 @@
+@import url(//fonts.googleapis.com/css?family=Lato);
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 100;
+  src: url("../../fontsetBrainsMono/ExtraLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 100;
+  src: url("../../fontsetBrainsMono/ExtraLightItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 200;
+  src: url("../../fontsetBrainsMono/Thin.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 200;
+  src: url("../../fontsetBrainsMono/ThinItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../../fontsetBrainsMono/Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 300;
+  src: url("../../fontsetBrainsMono/LightItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../fontsetBrainsMono/Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 400;
+  src: url("../../fontsetBrainsMono/RegularItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../../fontsetBrainsMono/Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 500;
+  src: url("../../fontsetBrainsMono/MediumItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../../fontsetBrainsMono/SemiBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 600;
+  src: url("../../fontsetBrainsMono/SemiBoldItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../../fontsetBrainsMono/Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 700;
+  src: url("../../fontsetBrainsMono/BoldItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: normal;
+  font-weight: 800 900;
+  src: url("../../fontsetBrainsMono/ExtraBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "JetBrainsMono";
+  font-style: italic;
+  font-weight: 800 900;
+  src: url("../../fontsetBrainsMono/ExtraBoldItalic.ttf") format("truetype");
+}
+table {
+  border-collapse: collapse;
+  border: 1px solid #3c6acd1a;
+}
+table tr:not(:last-child) {
+  border-bottom: 1px solid #3c6acd1a;
+}
+table > thead > tr > th {
+  font-weight: bold;
+  padding: 10px 16px;
+  text-align: center;
+  background: #3c6acd;
+  color: #ffffff;
+}
+table > tbody > tr:hover > td {
+  background-color: #00000010;
+}
+table > tbody > tr > td {
+  padding: 10px 16px;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-family: "Lato";
+  color: #000;
+}
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-corner {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3c6acd;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #0000;
+}
+
+/*# sourceMappingURL=base.css.map */
