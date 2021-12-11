@@ -1,0 +1,9 @@
+<div class="section">
+	<div class="title">{{row.name}}</div>
+	<div class="rows">
+		{% for key,value in row.data %}
+		<div class="cell">{{key}}</div>
+		<div class="cell">{{value}}</div>
+		{% endfor %}
+	</div>
+</div>

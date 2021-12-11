@@ -95,5 +95,50 @@
   font-weight: 800 900;
   src: url("./../../../fonts/JetBrainsMono/ExtraBoldItalic.ttf") format("truetype");
 }
+table {
+  border-collapse: collapse;
+  border: 1px solid #3c6acd1a;
+}
+table tr:not(:last-child) {
+  border-bottom: 1px solid #3c6acd1a;
+}
+table > thead > tr > th {
+  font-weight: bold;
+  padding: 10px 16px;
+  text-align: center;
+  background: #3c6acd;
+  color: #ffffff;
+}
+table > tbody > tr:hover > td {
+  background-color: #00000010;
+}
+table > tbody > tr > td {
+  padding: 10px 16px;
+  text-align: center;
+}
 
-/*# sourceMappingURL=fonts.css.map */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-family: "Lato";
+  color: #000;
+}
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-corner {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3c6acd;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #0000;
+}
+
+/*# sourceMappingURL=base.css.map */

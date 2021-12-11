@@ -1,14 +1,16 @@
 <?php
 
-use Zaacom\Routing\Router;
+use Zaacom\routing\Route;
+use Zaacom\routing\RouteMethodEnum;
+use Zaacom\routing\Router;
 
 class RouterTest extends \Codeception\Test\Unit
 {
     /**
-     * @var \UnitTester
+     * @var UnitTester
      */
     protected $tester;
-    
+
     protected function _before()
     {
     }
@@ -24,7 +26,7 @@ class RouterTest extends \Codeception\Test\Unit
      */
     public function testAddRoute()
     {
-        \Zaacom\Routing\Route::get("/test", ['TestController', "test"], ["name" => "test"]);
-        $this->tester->assertEquals(["GET" => [(new \Zaacom\Routing\Route(\Zaacom\Routing\RouteMethodEnum::GET,'/test', ['TestController', "test"], ["name" => "test"]))]], Router::getRoutes());
+        Route::get("/test", ['TestController', "test"], ["name" => "test"]);
+        $this->tester->assertEquals(["GET" => [(new Route(RouteMethodEnum::GET,'/test', ['TestController', "test"], ["name" => "test"]))]], Router::getRoutes());
     }
 }

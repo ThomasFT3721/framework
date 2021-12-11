@@ -59,6 +59,7 @@ HTMLElement.prototype.copyText = function () {
 /**
  *
  * @param {Function} callback
+ * @param args
  * @return {HTMLElement}
  */
 HTMLElement.prototype.onClick = function (callback, ...args) {
@@ -85,7 +86,7 @@ HTMLElement.prototype.getComputedStyle = function () {
 };
 
 HTMLInputElement.prototype.isChecked = function () {
-	if (this.type == "checkbox" || this.type == "radio") {
+	if (this.type === "checkbox" || this.type === "radio") {
 		return this.checked === true;
 	}
 	return null;

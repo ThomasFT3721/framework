@@ -1,0 +1,25 @@
+{% extends _base_file %} {% block app %}
+<form action="{{route('object_generator_generate')}}" method="post">
+	<table>
+		<thead>
+		<tr>
+			<th>Database</th>
+			<th>Table</th>
+			<th>File exist</th>
+			<th>Generate</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for database,class in classList %} {% for className,exist in class %}
+		<tr>
+			<td>{{database}}</td>
+			<td>{{className}}</td>
+			<td>{{exist|json_encode}}</td>
+			<td><input type="checkbox" name="class[{{database}}][{{className}}]" {% if exist == false %} checked="checked" {% endif %}></td>
+		</tr>
+		{% endfor %} {% endfor %}
+		</tbody>
+	</table>
+	<input type="submit" value="Generate">
+</form>
+{% endblock %}
