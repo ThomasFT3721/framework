@@ -14,10 +14,7 @@
     "autoload": {
         "psr-4": {
             "Zaacom\\": "src/Zaacom"
-        },
-        "classmap": [
-            "models"
-        ]
+        }
     },
     "require": {
         "twig/twig": "^3.3"
