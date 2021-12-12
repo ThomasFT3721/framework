@@ -6,8 +6,8 @@ namespace Zaacom\controllers;
 class FolderGeneratorController extends BaseController
 {
 
-    public function generate()
-    {
+	public function generate()
+	{
 		$directories = [
 			"/views",
 			"/routes",
@@ -21,8 +21,10 @@ class FolderGeneratorController extends BaseController
 			"/models",
 		];
 		foreach ($directories as $directory) {
-			mkdir(ROOT_DIR.$directory, recursive: true);
+			if (!is_dir(ROOT_DIR . $directory)) {
+				mkdir(ROOT_DIR . $directory, recursive: true);
+			}
 		}
 		return "all folders be generated";
-    }
+	}
 }
