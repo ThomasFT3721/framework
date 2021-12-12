@@ -22,26 +22,39 @@ class Route
 	}
 
 
-	public static function get(array|string $path, array|string $action, array $options = []): array
-	{
-		if (gettype($path) == 'string') {
-			$path = [$path];
-		}
-		$routes = [];
-		foreach ($path as $p) {
-			$routes[] = Router::add(RouteMethodEnum::GET, $p, $action, $options);
-		}
-		return $routes;
-	}
-
 	public static function post(array|string $path, array|string $action, array $options = []): array
 	{
+		return Route::add(RouteMethodEnum::POST, $path, $action, $options);
+	}
+
+	public static function get(array|string $path, array|string $action, array $options = []): array
+	{
+		return Route::add(RouteMethodEnum::GET, $path, $action, $options);
+	}
+
+	public static function put(array|string $path, array|string $action, array $options = []): array
+	{
+		return Route::add(RouteMethodEnum::PUT, $path, $action, $options);
+	}
+
+	public static function delete(array|string $path, array|string $action, array $options = []): array
+	{
+		return Route::add(RouteMethodEnum::DELETE, $path, $action, $options);
+	}
+
+	public static function patch(array|string $path, array|string $action, array $options = []): array
+	{
+		return Route::add(RouteMethodEnum::PATCH, $path, $action, $options);
+	}
+
+	private static function add(string $method, array|string $path, array|string $action, array $options = []): array
+	{
 		if (gettype($path) == 'string') {
 			$path = [$path];
 		}
 		$routes = [];
 		foreach ($path as $p) {
-			$routes[] = Router::add(RouteMethodEnum::POST, $p, $action, $options);
+			$routes[] = Router::add($method, $p, $action, $options);
 		}
 		return $routes;
 	}

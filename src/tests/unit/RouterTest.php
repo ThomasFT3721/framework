@@ -15,13 +15,13 @@ class RouterTest extends Unit
 
 	public function testGetRoutesGET()
 	{
-		Route::get(["/route"], ["", ""], ["name" => "route_name"]);
+		Route::get(["/route"], ["a", "b"], ["name" => "route_name"]);
 		$this->tester->assertArrayHasKey(RouteMethodEnum::GET, Router::getRoutes());
 	}
 
 	public function testGetRoutesPOST()
 	{
-		Route::post(["/route"], ["", ""], ["name" => "route_name"]);
+		Route::post(["/route"], ["c", "d"], ["name" => "route_name"]);
 		$this->tester->assertArrayHasKey(RouteMethodEnum::POST, Router::getRoutes());
 	}
 
@@ -34,7 +34,7 @@ class RouterTest extends Unit
 
 	public function testAdd()
 	{
-		Route::get(["/route"], ["", ""], ["name" => "route_name"]);
-		$this->tester->assertCount(1, Router::getRoutes(RouteMethodEnum::GET));
+		Route::delete(["/route"], ["e", "f"], ["name" => "route_name"]);
+		$this->tester->assertCount(1, Router::getRoutes(RouteMethodEnum::DELETE));
 	}
 }
