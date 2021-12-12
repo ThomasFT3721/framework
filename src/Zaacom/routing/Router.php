@@ -3,7 +3,6 @@
 namespace Zaacom\routing;
 
 use Exception;
-use Zaacom\views\ViewHandler;
 
 abstract class Router
 {
@@ -22,6 +21,7 @@ abstract class Router
 
     private static function includeRoutes()
     {
+		require_once __DIR__ . '/admin.php';
         if (!is_dir(ROOT_DIR . "/routes")) {
             mkdir(ROOT_DIR . "/routes");
         }
