@@ -22,7 +22,7 @@ class ViewHandler
 	 * @throws RuntimeError
 	 * @throws LoaderError
 	 */
-	public static function render(string $name, array $context = [], $base_file = "base.twig"): void
+	public static function render(string $name, array $context = [], $base_file = "base.twig"): bool
 	{
 		$view_folders = [
 			ROOT_DIR . '/views',
@@ -41,6 +41,8 @@ class ViewHandler
 			$context['_base_file'] = $twig->load($base_file);
 		}
 		echo $twig->display($name, $context);
+
+		return true;
 	}
 
 	private static function addDefaultFilter(Environment &$twig)
