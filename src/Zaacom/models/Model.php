@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Zaacom\models;
 
 interface Model
 {
@@ -13,7 +13,7 @@ interface Model
 
     public static function all(): array;
 
-    public static function where(mixed ...$parameters): \Zaacom\models\QuerySelect;
+    public static function where(mixed ...$parameters): QuerySelect;
 
     public static function each(callable $callable): array;
 

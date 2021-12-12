@@ -3,6 +3,7 @@
 namespace Zaacom\filesystem;
 
 
+use App\Models\Model;
 use Exception;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
@@ -34,7 +35,7 @@ class ClassGenerator extends FileGenerator
 			->addBlankLine()
 			->addContentLine("namespace Models\\" . $this->namespace . ";")
 			->addBlankLine()
-			->addContentLine("class $className implements \App\Models\Model")
+			->addContentLine("class $className implements \\".Model::class)
 			->addContentLine("{")
 			->addContentLine("const DATABASE = \"$database\";", 1)
 			->addContentLine("const TABLE = \"$table\";", 1);
