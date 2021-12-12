@@ -362,6 +362,11 @@ class ClassGenerator extends FileGenerator
 			->addContentLine("public static function deleteAll(mixed ...\$parameters): int", 1)
 			->addContentLine("{", 1)
 			->addContentLine("return \\".QueryDelete::class."::create(self::DATABASE)->setTable(self::TABLE)->where(...\$parameters)->execute()->rowCount();", 2)
+			->addContentLine("}", 1)
+			->addBlankLine()
+			->addContentLine("public function __toString(): string", 1)
+			->addContentLine("{", 1)
+			->addContentLine("return json_encode(\$this);", 2)
 			->addContentLine("}", 1);
 
 		return $this;
