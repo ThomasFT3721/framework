@@ -3,7 +3,6 @@
 namespace Zaacom\views;
 
 
-
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -24,40 +23,49 @@ class ViewHandler
 	 * @throws LoaderError
 	 */
 	public static function render(string $name, array $context = [], $base_file = "base.twig"): void
-    {
-        $twig = new Environment(
-            new FilesystemLoader(
-                [
-                    __DIR__.'/templates',
-                    ROOT_DIR.'/views'
-                ]
-            ),
-            [
-                //'cache' => ROOT_DIR . "/views/caches/twig",
-            ]
-        );
+	{
+		$view_folders = [
+			ROOT_DIR . '/views',
+		];
+		self::createViewFoldersIfNotExist($view_folders);
+		$view_folders[] = __DIR__ . '/templates';
+		$twig = new Environment(
+			new FilesystemLoader($view_folders),
+			[
+				//'cache' => ROOT_DIR . "/views/caches/twig",
+			]
+		);
 
-        self::addDefaultFilter($twig);
-        if ($base_file !== null) {
-            $context['_base_file'] = $twig->load($base_file);
-        }
-        echo $twig->display($name, $context);
-    }
+		self::addDefaultFilter($twig);
+		if ($base_file !== null) {
+			$context['_base_file'] = $twig->load($base_file);
+		}
+		echo $twig->display($name, $context);
+	}
 
-    private static function addDefaultFilter(Environment &$twig)
-    {
-        $twig->addFilter(new TwigFilter('html_entity_decode', 'html_entity_decode'));
-        $twig->addFunction(new TwigFunction('BASE_URL', function () {
-            return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL);
-        }));
-        $twig->addFunction(new TwigFunction('route', function (string $name, array $args = [], string $method = RouteMethodEnum::GET) {
-            $routes = Router::getRoutes($method);
-            foreach ($routes as $route) {
-                if ($route->getOption('name') == $name) {
-                    return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL)."/".$route->getPathFormatted($args);
-                }
-            }
-            throw new \Exception("Invalid route name");
-        }));
-    }
+	private static function addDefaultFilter(Environment &$twig)
+	{
+		$twig->addFilter(new TwigFilter('html_entity_decode', 'html_entity_decode'));
+		$twig->addFunction(new TwigFunction('BASE_URL', function () {
+			return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL);
+		}));
+		$twig->addFunction(new TwigFunction('route', function (string $name, array $args = [], string $method = RouteMethodEnum::GET) {
+			$routes = Router::getRoutes($method);
+			foreach ($routes as $route) {
+				if ($route->getOption('name') == $name) {
+					return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL) . "/" . $route->getPathFormatted($args);
+				}
+			}
+			throw new \Exception("Invalid route name");
+		}));
+	}
+
+	private static function createViewFoldersIfNotExist(array $folderList)
+	{
+		foreach ($folderList as $folder) {
+			if (!is_dir($folder)) {
+				mkdir($folder, recursive: true);
+			}
+		}
+	}
 }
