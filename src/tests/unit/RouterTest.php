@@ -1,32 +1,40 @@
 <?php
 
+namespace Zaacom\tests\unit;
+
+use Codeception\Test\Unit;
+use UnitTester;
 use Zaacom\routing\Route;
 use Zaacom\routing\RouteMethodEnum;
 use Zaacom\routing\Router;
 
-class RouterTest extends \Codeception\Test\Unit
+class RouterTest extends Unit
 {
-    /**
-     * @var UnitTester
-     */
-    protected $tester;
 
-    protected function _before()
-    {
-    }
+	protected UnitTester $tester;
 
-    protected function _after()
-    {
-    }
+	public function testGetRoutesGET()
+	{
+		Route::get(["/route"], ["", ""], ["name" => "route_name"]);
+		$this->tester->assertArrayHasKey(RouteMethodEnum::GET, Router::getRoutes());
+	}
 
-    // tests
+	public function testGetRoutesPOST()
+	{
+		Route::post(["/route"], ["", ""], ["name" => "route_name"]);
+		$this->tester->assertArrayHasKey(RouteMethodEnum::POST, Router::getRoutes());
+	}
 
-    /**
-     * @throws Exception
-     */
-    public function testAddRoute()
-    {
-        Route::get("/test", ['TestController', "test"], ["name" => "test"]);
-        $this->tester->assertEquals(["GET" => [(new Route(RouteMethodEnum::GET,'/test', ['TestController', "test"], ["name" => "test"]))]], Router::getRoutes());
-    }
+	public function testGetRoutesThrowable()
+	{
+		$this->tester->expectThrowable(\Exception::class, function() {
+			Router::getRoutes("UNKNOWN");
+		});
+	}
+
+	public function testAdd()
+	{
+		Route::get(["/route"], ["", ""], ["name" => "route_name"]);
+		$this->tester->assertCount(1, Router::getRoutes(RouteMethodEnum::GET));
+	}
 }
