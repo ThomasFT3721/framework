@@ -1,407 +1,423 @@
 @import "../base";
 
 body {
-    background: #eeeef5;
-    $widthBlockError: 1300px;
-    $widthBlockErrorLeft: 350px;
-    $widthBlockErrorRight: $widthBlockError - $widthBlockErrorLeft;
-    #errors {
-        width: $widthBlockError;
-        margin: 50px auto;
+	background: #eeeef5;
+	$widthBlockError: 1300px;
+	$widthBlockErrorLeft: 350px;
+	$widthBlockErrorRight: $widthBlockError - $widthBlockErrorLeft;
 
-        & > .top {
-            margin-bottom: 50px;
-            background-color: #fff;
-            border-radius: 4px;
-            padding: 30px 40px;
-            border: 1px solid $secondary10;
+	#framework_app {
+		#errors {
+			width: $widthBlockError;
+			margin: 50px auto;
 
-            .message {
-                font-size: 24px;
-            }
-            .file {
-                margin-top: 16px;
-                font-size: 16px;
-                color: $secondary50;
-            }
-        }
+			& > .top {
+				margin-bottom: 50px;
+				background-color: #ffffff;
+				border-radius: 4px;
+				padding: 30px 40px;
+				border: 1px solid $secondary10;
 
-        & > .bottom {
-            border: 1px solid $secondary10;
-            border-radius: 4px;
+				.message {
+					font-size: 24px;
+				}
 
-            & > .header {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-top-left-radius: 4px;
-                border-top-right-radius: 4px;
-                height: 40px;
-                padding: 3px;
-                background: $secondary;
+				.file {
+					margin-top: 16px;
+					font-size: 16px;
+					color: $secondary50;
+				}
+			}
 
-                & > .element {
-                    height: 34px;
-                    text-align: center;
-                    padding: 0 18px;
-                    margin: 0 2px;
-                    line-height: 34px;
-                    border-radius: 4px;
-                    color: $secondaryText;
-                    cursor: pointer;
-                    user-select: none;
+			& > .bottom {
+				border: 1px solid $secondary10;
+				border-radius: 4px;
 
-                    &:hover,
-                    &.active {
-                        background: $primaryDark;
-                        color: $primaryDarkText;
-                    }
-                    &.active {
-                        cursor: default;
-                    }
-                }
-            }
-            & > .content {
-                border-bottom-left-radius: 4px;
-                border-bottom-right-radius: 4px;
-                background: #fff;
-                & > .element {
-                    display: none;
-                    width: 100%;
-                    border-bottom-left-radius: 4px;
-                    border-bottom-right-radius: 4px;
-                    overflow: hidden;
+				& > .header {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					border-top-left-radius: 4px;
+					border-top-right-radius: 4px;
+					height: 40px;
+					padding: 3px;
+					background: $secondary;
 
-                    &.active {
-                        display: block;
+					& > .element {
+						height: 34px;
+						text-align: center;
+						padding: 0 18px;
+						margin: 0 2px;
+						line-height: 34px;
+						border-radius: 4px;
+						color: $secondaryText;
+						cursor: pointer;
+						user-select: none;
 
-                        &#content_stack_trace {
-                            display: grid;
-                        }
-                    }
+						&:hover,
+						&.active {
+							background: $primaryDark;
+							color: $primaryDarkText;
+						}
 
-                    &#content_stack_trace {
-                        grid-template-columns: $widthBlockErrorLeft $widthBlockErrorRight;
+						&.active {
+							cursor: default;
+						}
+					}
+				}
 
-                        & > .left {
-                            overflow-y: auto;
-                            overflow-x: hidden;
+				& > .content {
+					border-bottom-left-radius: 4px;
+					border-bottom-right-radius: 4px;
+					background: #ffffff;
 
-                            & > .step {
-                                position: relative;
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                padding: 20px 10px 20px 50px;
-                                cursor: pointer;
+					& > .element {
+						display: none;
+						width: 100%;
+						border-bottom-left-radius: 4px;
+						border-bottom-right-radius: 4px;
+						overflow: hidden;
 
-                                * {
-                                    color: inherit;
-                                }
+						&.active {
+							display: block;
 
-                                &::before {
-                                    content: attr(data-number);
-                                    position: absolute;
-                                    left: 0;
-                                    width: 50px;
-                                    text-align: center;
-                                }
-                                &::after {
-                                    content: "";
-                                    background: $secondary25;
-                                    height: 100%;
-                                    width: 2px;
-                                    position: absolute;
-                                    left: 50px;
-                                }
+							&#content_stack_trace {
+								display: grid;
+							}
+						}
 
-                                &.active {
-                                    cursor: default;
-                                    background: $secondary10;
+						&#content_stack_trace {
+							grid-template-columns: $widthBlockErrorLeft $widthBlockErrorRight;
 
-                                    &::after {
-                                        background: $secondary75;
-                                    }
-                                }
+							& > .left {
+								overflow-y: auto;
+								overflow-x: hidden;
 
-                                &:not(.active):hover {
-                                    &::after {
-                                        background: $secondary50;
-                                    }
-                                }
+								& > .step {
+									position: relative;
+									display: flex;
+									flex-direction: column;
+									justify-content: center;
+									padding: 20px 10px 20px 50px;
+									cursor: pointer;
 
-                                & > div {
-                                    padding: 0 0 0 20px;
-                                    overflow: hidden;
+									* {
+										color: inherit;
+									}
 
-                                    &.class {
-                                        color: $primary50;
-                                    }
-                                }
-                            }
-                        }
+									&::before {
+										content: attr(data-number);
+										position: absolute;
+										left: 0;
+										width: 50px;
+										text-align: center;
+									}
 
-                        & > .right {
-                            width: $widthBlockErrorRight;
-                            & > .step {
-                                display: none;
-                                flex-direction: column;
-                                position: relative;
-                                height: 100%;
-                                width: $widthBlockErrorRight;
+									&::after {
+										content: "";
+										background: $secondary25;
+										height: 100%;
+										width: 2px;
+										position: absolute;
+										left: 50px;
+									}
 
-                                &.active {
-                                    display: flex;
-                                }
+									&.active {
+										cursor: default;
+										background: $secondary10;
 
-                                & > .top {
-                                    display: flex;
-                                    flex-direction: column-reverse;
-                                    justify-content: flex-end;
-                                    padding: 15px 10px 15px 20px;
-                                    height: 80px;
-                                    min-height: 80px;
-                                    max-height: 80px;
+										&::after {
+											background: $secondary75;
+										}
+									}
 
-                                    & > .class {
-                                        color: $primary50;
-                                        font-size: 16px;
-                                        height: 19px;
-                                    }
-                                    & > .file {
-                                        font-size: 18px;
-                                    }
-                                }
+									&:not(.active):hover {
+										&::after {
+											background: $secondary50;
+										}
+									}
 
-                                &>.bottom {
-                                    & > .numbers {
-                                        position: absolute;
-                                        display: flex;
-                                        flex-direction: column;
-                                        top: 80px;
-                                        bottom: 0;
-                                        background: #353535;
-                                        padding: 12px 0;
+									& > div {
+										padding: 0 0 0 20px;
+										overflow: hidden;
 
-                                        & > .number {
-                                            position: relative;
-                                            height: 17px;
-                                            max-height: 17px;
-                                            min-height: 17px;
-                                            font-size: 13px;
-                                            width: 40px;
-                                            padding: 0 12px;
-                                            user-select: none;
-                                            color: #fff;
-                                            text-align: end;
-/*
-                                            &::after {
-                                                content: "";
-                                                width: 1000px;
-                                                height: 17px;
-                                                max-height: 17px;
-                                                min-height: 17px;
-                                                position: absolute;
-                                                top: 0;
-                                            }
-*/
-                                            &.active,
-                                            &:hover {
-                                                background: $secondary50;
+										&.class {
+											color: $primary50;
+										}
+									}
+								}
+							}
 
-                                                &::after {
-                                                    background: $secondary25;
-                                                }
-                                            }
+							& > .right {
+								width: $widthBlockErrorRight;
 
-                                            &.active {
-                                                &::after {
-                                                    background: $secondary25;
-                                                }
-                                            }
-                                        }
-                                    }
+								& > .step {
+									display: none;
+									flex-direction: column;
+									position: relative;
+									height: 100%;
+									width: $widthBlockErrorRight;
 
-                                    & > .rows {
-                                        display: flex;
-                                        flex-direction: column;
-                                        position: relative;
-                                        background: #1e1e1e;
-                                        padding: 12px 0;
-                                        height: 100%;
-                                        width: $widthBlockErrorRight - 40px;
-                                        margin-left: 40px;
-                                        overflow-x: auto;
-                                        overflow-y: hidden;
+									&.active {
+										display: flex;
+									}
 
-                                        & > .row {
-                                            color: #d4d4d4;
-                                            white-space: nowrap;
-                                            word-break: keep-all;
-                                            width: -webkit-fit-content;
-                                            position: relative;
-                                            height: 17px;
-                                            display: flex;
-                                            flex-direction: row;
-                                            align-items: center;
-                                            justify-content: flex-start;
-                                            padding-left: 8px;
-                                            padding-right: 20px;
-                                            font-family: JetBrainsMono !important;
+									& > .top {
+										display: flex;
+										flex-direction: column-reverse;
+										justify-content: flex-end;
+										padding: 15px 10px 15px 20px;
+										height: 80px;
+										min-height: 80px;
+										max-height: 80px;
 
-                                            * {
-                                                font-family: JetBrainsMono !important;
-                                            }
+										& > .class {
+											color: $primary50;
+											font-size: 16px;
+											height: 19px;
+										}
 
-                                            & .tab {
-                                                width: 30px;
-                                            }
+										& > .file {
+											font-size: 18px;
+										}
+									}
 
-                                            & .class {
-                                                color: #00ccaf;
-                                            }
+									& > .bottom {
+										& > .numbers {
+											position: absolute;
+											display: flex;
+											flex-direction: column;
+											top: 80px;
+											bottom: 0;
+											background: #353535;
+											padding: 12px 0;
 
-                                            & .keyword {
-                                                color: #569cd6;
-                                                * {
-                                                    color: #569cd6 !important;
-                                                }
-                                            }
+											& > .number {
+												position: relative;
+												height: 17px;
+												max-height: 17px;
+												min-height: 17px;
+												font-size: 13px;
+												width: 40px;
+												padding: 0 12px;
+												user-select: none;
+												color: #ffffff;
+												text-align: end;
+												/*
+																							&::after {
+																								content: "";
+																								width: 1000px;
+																								height: 17px;
+																								max-height: 17px;
+																								min-height: 17px;
+																								position: absolute;
+																								top: 0;
+																							}
+												*/
+												&.active,
+												&:hover {
+													background: $secondary50;
 
-                                            & .utils {
-                                                color: #da70ca;
-                                            }
+													&::after {
+														background: $secondary25;
+													}
+												}
 
-                                            & .number {
-                                                color: #aecea3;
-                                            }
+												&.active {
+													&::after {
+														background: $secondary25;
+													}
+												}
+											}
+										}
 
-                                            & .function {
-                                                color: #dbdba3;
-                                                * {
-                                                    color: #dbdba3 !important;
-                                                }
-                                            }
-                                            & .variable {
-                                                color: #88deff;
-                                                * {
-                                                    color: #88deff !important;
-                                                }
-                                            }
-                                            & .string {
-                                                color: #ce9178;
+										& > .rows {
+											display: flex;
+											flex-direction: column;
+											position: relative;
+											background: #1e1e1e;
+											padding: 12px 0;
+											height: 100%;
+											width: $widthBlockErrorRight - 40px;
+											margin-left: 40px;
+											overflow-x: auto;
+											overflow-y: hidden;
 
-                                                *:not(.variable) {
-                                                    color: #ce9178 !important;
-                                                }
-                                            }
-                                            & .comment {
-                                                color: #5d9b4c;
+											& > .row {
+												color: #d4d4d4;
+												white-space: nowrap;
+												word-break: keep-all;
+												width: -webkit-fit-content;
+												position: relative;
+												height: 17px;
+												display: flex;
+												flex-direction: row;
+												align-items: center;
+												justify-content: flex-start;
+												padding-left: 8px;
+												padding-right: 20px;
+												font-family: JetBrainsMono !important;
 
-                                                * {
-                                                    color: #5d9b4c !important;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+												* {
+													font-family: JetBrainsMono !important;
+												}
 
-                    &#content_response {
-                        & > .rows {
-                            display: flex;
-                            flex-direction: column;
-                            position: relative;
-                            background: #1e1e1e;
-                            padding: 12px 0;
+												& .tab {
+													width: 30px;
+												}
 
-                            &::before {
-                                content: "";
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                width: 40px;
-                                height: 100%;
-                                background: #353535;
-                            }
+												& .class {
+													color: #00ccaf;
+												}
 
-                            & > .row {
-                                position: relative;
-                                display: flex;
-                                align-items: center;
-                                flex-wrap: wrap;
-                                padding-left: 44px;
-                                min-height: 20px;
-                                letter-spacing: 1px;
-                                color: #d4d4d4;
+												& .keyword {
+													color: #569cd6;
 
-                                * {
-                                    color: inherit;
-                                }
+													* {
+														color: #569cd6 !important;
+													}
+												}
 
-                                &::before {
-                                    content: attr(data-number);
-                                    position: absolute;
-                                    left: 0;
-                                    width: 40px;
-                                    height: 100%;
-                                    text-align: center;
-                                    user-select: none;
-                                    color: #fff;
-                                    letter-spacing: 0;
-                                }
+												& .utils {
+													color: #da70ca;
+												}
 
-                                &.active,
-                                &:hover {
-                                    background: $secondary25;
-                                }
+												& .number {
+													color: #aecea3;
+												}
 
-                                &.active {
-                                    &::before {
-                                        background: $secondary50;
-                                    }
-                                }
+												& .function {
+													color: #dbdba3;
 
-                                & .tab {
-                                    width: 30px;
-                                }
-                            }
-                        }
-                    }
+													* {
+														color: #dbdba3 !important;
+													}
+												}
 
-                    & > .sections {
-                        & > .section {
-                            padding: 20px 30px;
+												& .variable {
+													color: #88deff;
 
-                            & > .title {
-                                font-weight: bold;
-                            }
+													* {
+														color: #88deff !important;
+													}
+												}
 
-                            & > .rows {
-                                display: grid;
-                                grid-template-columns: 230px 1fr;
-                                gap: 8px 24px;
+												& .string {
+													color: #ce9178;
 
-                                & > :nth-child(2n + 1) {
-                                    text-align: end;
-                                    font-weight: 100;
-                                    color: $secondary50;
-                                }
+													*:not(.variable) {
+														color: #ce9178 !important;
+													}
+												}
 
-                                & > :nth-child(2n) {
-                                    word-break: break-all;
-                                }
-                            }
+												& .comment {
+													color: #5d9b4c;
 
-                            &:not(:last-child) {
-                                border-bottom: 2px solid #{$secondary10};
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+													* {
+														color: #5d9b4c !important;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+						&#content_response {
+							& > .rows {
+								display: flex;
+								flex-direction: column;
+								position: relative;
+								background: #1e1e1e;
+								padding: 12px 0;
+
+								&::before {
+									content: "";
+									position: absolute;
+									top: 0;
+									left: 0;
+									width: 40px;
+									height: 100%;
+									background: #353535;
+								}
+
+								& > .row {
+									position: relative;
+									display: flex;
+									align-items: center;
+									flex-wrap: wrap;
+									padding-left: 44px;
+									min-height: 20px;
+									letter-spacing: 1px;
+									color: #d4d4d4;
+
+									* {
+										color: inherit;
+									}
+
+									&::before {
+										content: attr(data-number);
+										position: absolute;
+										left: 0;
+										width: 40px;
+										height: 100%;
+										text-align: center;
+										user-select: none;
+										color: #ffffff;
+										letter-spacing: 0;
+									}
+
+									&.active,
+									&:hover {
+										background: $secondary25;
+									}
+
+									&.active {
+										&::before {
+											background: $secondary50;
+										}
+									}
+
+									& .tab {
+										width: 30px;
+									}
+								}
+							}
+						}
+
+						& > .sections {
+							& > .section {
+								padding: 20px 30px;
+
+								& > .title {
+									font-weight: bold;
+								}
+
+								& > .rows {
+									display: grid;
+									grid-template-columns: 230px 1fr;
+									gap: 8px 24px;
+
+									& > :nth-child(2n + 1) {
+										text-align: end;
+										font-weight: 100;
+										color: $secondary50;
+									}
+
+									& > :nth-child(2n) {
+										word-break: break-all;
+									}
+								}
+
+								&:not(:last-child) {
+									border-bottom: 2px solid #{$secondary10};
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

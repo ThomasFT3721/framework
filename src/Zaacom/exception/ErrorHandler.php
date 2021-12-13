@@ -98,7 +98,7 @@ class ErrorHandler
 				"traces" => $traces,
 				"request" => $request,
 				"preview" => $content,
-				"previewRows" => explode("\n", $content),
+				"previewRows" => explode("\n", htmlspecialchars($content)),
 			], "framework_base.twig");
 		} catch (\Throwable $th) {
 			print_readable([

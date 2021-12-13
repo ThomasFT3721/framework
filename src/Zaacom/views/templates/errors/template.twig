@@ -62,7 +62,12 @@
 					<div class="sections"> {% for row in request %} {{ include('/errors/request_section.twig') }} {% endfor %}
 					</div>
 				</div>
-				<div class="element" id="content_preview"> {{preview|raw}}</div>
+				<div class="element" id="content_preview">
+					<iframe src="#" id="framework_errors_preview"></iframe>
+					<script>
+						document.getElementById('framework_errors_preview').src = "data:text/html;charset=utf-8," + escape(`{{preview|raw}}`);
+					</script>
+				</div>
 				<div class="element" id="content_response">
 					<div class="rows">
 						{% for rowNumber,row in previewRows %}
