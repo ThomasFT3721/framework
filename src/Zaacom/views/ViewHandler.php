@@ -48,6 +48,7 @@ class ViewHandler
 	private static function addDefaultFilter(Environment &$twig)
 	{
 		$twig->addFilter(new TwigFilter('html_entity_decode', 'html_entity_decode'));
+		$twig->addFilter(new TwigFilter('json_encode', 'json_encode'));
 		$twig->addFunction(new TwigFunction('BASE_URL', function () {
 			return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL);
 		}));

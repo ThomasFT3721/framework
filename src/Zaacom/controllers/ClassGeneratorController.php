@@ -25,7 +25,7 @@ class ClassGeneratorController extends BaseController
                 $classList[$databaseName][$tableName] = (new ClassBuilder($tableName, $databaseName))->classGenerator->fileExist();
             }
         }
-        return ViewHandler::render("/models/index.twig", ["classList" => $classList]);
+        return ViewHandler::render("/models/index.twig", ["classList" => $classList], "framework_base.twig");
     }
 
     public function generate()
