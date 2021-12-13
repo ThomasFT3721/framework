@@ -53,6 +53,12 @@ class ViewHandler
 		$twig->addFunction(new TwigFunction('BASE_URL', function () {
 			return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL);
 		}));
+		$twig->addFunction(new TwigFunction('CURRENT_URL_WITH_PREFIX', function () {
+			return SERVER_REQUEST_URI;
+		}));
+		$twig->addFunction(new TwigFunction('CURRENT_URL', function () {
+			return SERVER_REQUEST_URI_PARSED;
+		}));
 		$twig->addFunction(new TwigFunction('route', function (string $name, array $args = [], string $method = RouteMethodEnum::GET) {
 			$routes = Router::getRoutes($method);
 			foreach ($routes as $route) {
