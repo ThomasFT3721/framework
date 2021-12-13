@@ -24,6 +24,9 @@ abstract class Router
 
 	private static function includeRoutes()
 	{
+		if (!defined("ROOT_DIR")) {
+			define("ROOT_DIR", __DIR__ . "/../../../../../..");
+		}
 		require_once __DIR__ . '/admin.php';
 		if (!is_dir(ROOT_DIR . "/routes")) {
 			mkdir(ROOT_DIR . "/routes");

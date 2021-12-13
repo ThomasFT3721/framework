@@ -24,6 +24,9 @@ class ViewHandler
 	 */
 	public static function render(string $name, string $page_title, array $context = [], string $base_file = "base.twig"): bool
 	{
+		if (!defined("ROOT_DIR")) {
+			define("ROOT_DIR", __DIR__ . "/../../../../../..");
+		}
 		$view_folders = [
 			ROOT_DIR . '/views',
 		];
