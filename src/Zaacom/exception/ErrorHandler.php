@@ -112,6 +112,8 @@ class ErrorHandler
 
 	private static function getFileContentsFormatted(string $path): array
 	{
+		error_reporting(E_ALL ^ E_WARNING);
+
 		try {
 			$res = explode("\n", file_get_contents($path));
 
@@ -135,6 +137,7 @@ class ErrorHandler
 				"line" => $th->getLine(),
 			]);
 		}
+		error_reporting(E_ALL);
 		return $res;
 	}
 
