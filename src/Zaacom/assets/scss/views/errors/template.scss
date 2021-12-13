@@ -203,17 +203,7 @@ body {
 												user-select: none;
 												color: #ffffff;
 												text-align: end;
-												/*
-																							&::after {
-																								content: "";
-																								width: 1000px;
-																								height: 17px;
-																								max-height: 17px;
-																								min-height: 17px;
-																								position: absolute;
-																								top: 0;
-																							}
-												*/
+
 												&.active,
 												&:hover {
 													background: $secondary50;
@@ -321,6 +311,16 @@ body {
 										}
 									}
 								}
+							}
+						}
+
+						&#content_preview {
+							& > #framework_errors_preview {
+								width: 100%;
+								height: 100%;
+								outline: none;
+								border: none;
+								aspect-ratio: 16 / 9;
 							}
 						}
 

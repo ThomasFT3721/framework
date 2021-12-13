@@ -313,17 +313,6 @@ body #framework_app #errors > .bottom > .content > .element#content_stack_trace 
   user-select: none;
   color: #ffffff;
   text-align: end;
-  /*
-  											&::after {
-  												content: "";
-  												width: 1000px;
-  												height: 17px;
-  												max-height: 17px;
-  												min-height: 17px;
-  												position: absolute;
-  												top: 0;
-  											}
-  */
 }
 body #framework_app #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .bottom > .numbers > .number.active, body #framework_app #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .bottom > .numbers > .number:hover {
   background: #3c6acd88;
@@ -405,6 +394,13 @@ body #framework_app #errors > .bottom > .content > .element#content_stack_trace 
 }
 body #framework_app #errors > .bottom > .content > .element#content_stack_trace > .right > .step > .bottom > .rows > .row .comment * {
   color: #5d9b4c !important;
+}
+body #framework_app #errors > .bottom > .content > .element#content_preview > #framework_errors_preview {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: none;
+  aspect-ratio: 16/9;
 }
 body #framework_app #errors > .bottom > .content > .element#content_response > .rows {
   display: flex;

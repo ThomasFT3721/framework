@@ -93,12 +93,21 @@ class ErrorHandler
 				],
 			];
 
+			$contentRows = explode("\n", htmlspecialchars($content));
+
+			foreach ($contentRows as &$row) {
+				$row = str_replace("`", "\`", $row);
+				$row = str_replace(" ", "&nbsp;", $row);
+				$row = str_replace('	', "&nbsp;&nbsp;&nbsp;&nbsp;", $row);
+				$row = str_replace("&nbsp;&nbsp;&nbsp;&nbsp;", "<div class=\"tab\"></div>", $row);
+			}
+
 			ViewHandler::render('/errors/template.twig', [
 				"th" => $th,
 				"traces" => $traces,
 				"request" => $request,
 				"preview" => $content,
-				"previewRows" => explode("\n", htmlspecialchars($content)),
+				"previewRows" => $contentRows,
 			], "framework_base.twig");
 		} catch (\Throwable $th) {
 			print_readable([
