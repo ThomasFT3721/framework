@@ -22,7 +22,7 @@ class ViewHandler
 	 * @throws RuntimeError
 	 * @throws LoaderError
 	 */
-	public static function render(string $name, array $context = [], $base_file = "base.twig"): bool
+	public static function render(string $name, string $page_title, array $context = [], string $base_file = "base.twig"): bool
 	{
 		$view_folders = [
 			ROOT_DIR . '/views',
@@ -40,6 +40,7 @@ class ViewHandler
 		if ($base_file !== null) {
 			$context['_base_file'] = $twig->load($base_file);
 		}
+		$context['_page_title'] = $page_title;
 		echo $twig->display($name, $context);
 
 		return true;

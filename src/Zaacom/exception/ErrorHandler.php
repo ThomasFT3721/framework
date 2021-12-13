@@ -102,13 +102,14 @@ class ErrorHandler
 				$row = str_replace("&nbsp;&nbsp;&nbsp;&nbsp;", "<div class=\"tab\"></div>", $row);
 			}
 
-			ViewHandler::render('/errors/template.twig', [
-				"th" => $th,
-				"traces" => $traces,
-				"request" => $request,
-				"preview" => $content,
-				"previewRows" => $contentRows,
-			], "framework_base.twig");
+			ViewHandler::render('/errors/template.twig',
+				$th->getMessage(), [
+					"th" => $th,
+					"traces" => $traces,
+					"request" => $request,
+					"preview" => $content,
+					"previewRows" => $contentRows,
+				], "framework_base.twig");
 		} catch (\Throwable $th) {
 			print_readable([
 				"message" => $th->getMessage(),
