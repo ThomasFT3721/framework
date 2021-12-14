@@ -3,6 +3,8 @@
 namespace Zaacom\routing;
 
 use Exception;
+use Zaacom\environment\EnvironmentVariable;
+use Zaacom\environment\EnvironmentVariablesIdentifiers;
 use Zaacom\exception\InvalidNumberArguments;
 use Zaacom\exception\InvalidNumberArgumentsException;
 use Zaacom\exception\UnknownRouteException;
@@ -88,5 +90,19 @@ abstract class Router
 		}
 		throw new Exception("Unknown method '$method'");
 
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public static function getRouteUrl(string $name, array $args = [], string $method = RouteMethodEnum::GET): string
+	{
+		$routes = self::getRoutes($method);
+		foreach ($routes as $route) {
+			if ($route->getOption('name') == $name) {
+				return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL) . "/" . $route->getPathFormatted($args);
+			}
+		}
+		throw new \Exception("Route not found for '$name'");
 	}
 }

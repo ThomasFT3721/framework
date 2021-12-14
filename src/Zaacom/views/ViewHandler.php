@@ -63,13 +63,7 @@ class ViewHandler
 			return SERVER_REQUEST_URI_PARSED;
 		}));
 		$twig->addFunction(new TwigFunction('route', function (string $name, array $args = [], string $method = RouteMethodEnum::GET) {
-			$routes = Router::getRoutes($method);
-			foreach ($routes as $route) {
-				if ($route->getOption('name') == $name) {
-					return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL) . "/" . $route->getPathFormatted($args);
-				}
-			}
-			throw new \Exception("Invalid route name");
+			return Router::getRouteUrl($name, $args, $method);
 		}));
 	}
 
