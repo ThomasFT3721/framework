@@ -267,19 +267,19 @@ class QuerySelect implements QueryInterface
 		}
 		$result = $this->execute();
 		if ($result->rowCount() == 0) {
-			return false;
+			return null;
 		}
 		return $this->class::__create($result->fetch());
 	}
 
-	public function getAll(?string $class = null): mixed
+	public function getAll(?string $class = null): array
 	{
 		if ($class != null) {
 			$this->setClass($class);
 		}
 		$result = $this->execute();
 		if ($result->rowCount() == 0) {
-			return false;
+			return [];
 		}
 		$objects = [];
 		foreach ($result->fetchAll() as $key => $value) {
