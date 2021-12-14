@@ -237,7 +237,7 @@ class QuerySelect implements QueryInterface
 	 *
 	 * @return  self
 	 */
-	public function setClass(string $class)
+	public function setClass(string $class): self
 	{
 		$this->class = $class;
 
@@ -247,13 +247,21 @@ class QuerySelect implements QueryInterface
 	/**
 	 * @throws Throwable
 	 */
-	public function execute(): PDOStatement
+	public function execute(?string $query = null): PDOStatement
 	{
 		try {
-			return Database::executerRequete($this->database, $this->buildQuery());
+			if ($query == null) {
+				$query = $this->buildQuery();
+			}
+			return Database::executerRequete($this->database, $query);
 		} catch (Throwable $th) {
-			throw new \PDOException("Error during execute request: " . $this->buildQuery(), previous: $th);
+			throw new \PDOException("Error during execute request: " . $query, previous: $th);
 		}
+	}
+
+	public function count(): int
+	{
+		return $this->execute()->fetchAll()[0][0];
 	}
 
 	public function get(?string $class = null): mixed
