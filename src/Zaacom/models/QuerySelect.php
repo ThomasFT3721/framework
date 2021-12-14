@@ -107,7 +107,7 @@ class QuerySelect implements QueryInterface
 		if ($comparator === null) {
 			$where .= match (gettype($value)) {
 				'string' => "LIKE ",
-				'int' => "= ",
+				"integer" => "=",
 				'array' => "IN ",
 				default => "= ",
 			};
@@ -117,7 +117,6 @@ class QuerySelect implements QueryInterface
 
 		$where .= match (gettype($value)) {
 			'string' => "'$value'",
-			'int' => "$value",
 			'array' => "(" . implode(",", $value) . ")",
 			default => "$value",
 		};
