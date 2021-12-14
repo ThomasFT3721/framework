@@ -90,25 +90,11 @@ class QuerySelect implements QueryInterface
 		if (count($parameters) != 0) {
 			if (!is_array($parameters[0])) {
 				$parameters = [[$parameters]];
-			} elseif (!is_array($parameters[0][0])) {
+			} elseif (count($parameters[0]) != 0 && !is_array($parameters[0][0])) {
 				$parameters = [$parameters];
 			}
 
-			$where = "";
-
-			foreach ($parameters as $paramsList) {
-				foreach ($paramsList as $params) {
-					if (count($params) == 2) {
-						$where .= $this->buildWhere('AND', ...$params);
-					} elseif (count($params) == 3) {
-						$where .= $this->buildWhere('AND', $params[0], $params[2], $params[1]);
-					} else {
-						throw new Exception("Error Processing Request");
-					}
-				}
-			}
-
-			$this->where .= $where;
+			$this->where .= $this->formatWhere($parameters);
 		}
 
 		return $this;
@@ -139,34 +125,45 @@ class QuerySelect implements QueryInterface
 		return $where;
 	}
 
+	/**
+	 * @param array $parameters
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	private function formatWhere(array $parameters): string
+	{
+		$where = "";
+		foreach ($parameters as $paramsList) {
+			foreach ($paramsList as $params) {
+				if (count($params) == 2) {
+					$where .= $this->buildWhere('AND', ...$params);
+				} elseif (count($params) == 3) {
+					$where .= $this->buildWhere('AND', $params[0], $params[2], $params[1]);
+				} else {
+					throw new Exception("Error Processing Request");
+				}
+			}
+		}
+		return $where;
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public function orWhere(mixed ...$parameters): self
 	{
 		if (count($parameters) != 0) {
 			if (!is_array($parameters[0])) {
 				$parameters = [[$parameters]];
-			} elseif (!is_array($parameters[0][0])) {
+			} elseif (count($parameters[0]) != 0 && !is_array($parameters[0][0])) {
 				$parameters = [$parameters];
 			}
 
 			if ($this->where == "1") {
 				$this->where = "0";
 			}
-
-			$where = " OR (1";
-
-			foreach ($parameters as $paramsList) {
-				foreach ($paramsList as $params) {
-					if (count($params) == 2) {
-						$where .= $this->buildWhere('AND', ...$params);
-					} elseif (count($params) == 3) {
-						$where .= $this->buildWhere('AND', $params[0], $params[2], $params[1]);
-					} else {
-						throw new Exception("Error Processing Request");
-					}
-				}
-			}
-
-			$this->where .= $where . ")";
+			$this->where .= " OR (1" . $this->formatWhere($parameters) . ")";
 		}
 
 		return $this;
