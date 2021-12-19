@@ -105,4 +105,13 @@ abstract class Router
 		}
 		throw new \Exception("Route not found for '$name'");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public static function redirectTo(string $name, array $args = [], string $method = RouteMethodEnum::GET)
+	{
+		header("Location: ".self::getRouteUrl($name, $args, $method));
+		exit();
+	}
 }
