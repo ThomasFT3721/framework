@@ -193,7 +193,22 @@ class QuerySelect implements QueryInterface
 		return $this;
 	}
 
-	public function orderBy(string $orderBy): self
+	public function orderBy(array|string $field, string $direction = "ASC"): self
+	{
+		if ($this->orderBy == null) {
+			$this->orderBy = "";
+		} else {
+			$this->orderBy .= ", ";
+		}
+		if (gettype($field) == "array") {
+			$field = implode("`.`", $field);
+		}
+		$this->orderBy .= "`$field` $direction";
+
+		return $this;
+	}
+
+	public function setOrderBy(string $orderBy): self
 	{
 		$this->orderBy = $orderBy;
 
