@@ -1,3 +1,3 @@
 # Framework zaacom
 
-### php version: **8.1**
+php version : **8.0**
