@@ -26,10 +26,15 @@ class DateTime extends \DateTime
     {
         return parent::format($format);
     }
-    public function formatFrenchMax(string $format = 'H:i:s d/m/Y'): string
-    {
-        return parent::format($format);
-    }
+	public function formatFrenchMax(string $format = 'H:i:s d/m/Y'): string
+	{
+		return parent::format($format);
+	}
+
+	public function isValidDateTime(): bool
+	{
+		return $this->datetime !== "0000-01-01 00:00:00";
+	}
 
     public function __toString()
     {

@@ -12,7 +12,6 @@ const ROOT_DIR = __DIR__;
 
 require_once __DIR__ . "/vendor/autoload.php";
 
-
 if (EnvironmentVariable::get(EnvironmentVariablesIdentifiers::MODE_DEBUG) == "true") {
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
@@ -27,9 +26,10 @@ function exception_handler($th)
 		echo "Display 404";
 	}
 }
+
 function is_true($val): bool
 {
-	return (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val) ?? false;
+	return (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool)$val) ?? false;
 }
 
 function zzzPrintReadableArray(array $array, int $tabIndex = 0)
@@ -53,7 +53,7 @@ function zzzPrintReadableArray(array $array, int $tabIndex = 0)
 				echo $tab;
 			}
 			echo "<b>]</b>," . $carriageReturn;
-		} else if (is_array($value)) {
+		} elseif (is_array($value)) {
 			for ($i = 1; $i < $index; $i++) {
 				echo $tab;
 			}
@@ -79,7 +79,7 @@ function zzzPrintReadableArray(array $array, int $tabIndex = 0)
 				if (is_int($value)) {
 					echo "[<b>" . $key . "</b>] => <i>" . preg_replace("/\)/", ")</i><b>", $varDump, 1) . $value . "</b>," . $carriageReturn;
 				} else {
-					    echo "[<b>" . $key . "</b>] => <i>" . preg_replace("/\)/", ")</i><b>", $varDump, 1) . "</b>," . $carriageReturn;
+					echo "[<b>" . $key . "</b>] => <i>" . preg_replace("/\)/", ")</i><b>", $varDump, 1) . "</b>," . $carriageReturn;
 				}
 			}
 		}
@@ -98,6 +98,35 @@ function print_readable(...$values)
 	zzzPrintReadableArray($values);
 }
 
+function get_protected_data(string $key, array $from = [$_POST, $_GET]): array|\Zaacom\helper\DateTime|string|int|float|null
+{
+	foreach ($from as $array) {
+		if (array_key_exists($key, $array)) {
+			$value = $array[$key];
+			if (gettype($value) === "string") {
+				$value = trim($value);
+				if (!empty($value)) {
+					try {
+						$datetime = new \Zaacom\helper\DateTime($value);
+						$numberMatchesInt = preg_match("/^-?[0-9]*$/", $value, $matches);
+						$numberMatchesFloat = preg_match("/^-?[0-9]*(.|,)?[0-9]*$/", $value, $matches);
+						if ($datetime->isValidDateTime()) {
+							$value = $datetime;
+						} elseif ($numberMatchesInt === 1) {
+							$value = intval($value);
+						} elseif ($numberMatchesFloat === 1) {
+							$value = floatval($value);
+						}
+					} catch (\Throwable $th) {
+
+					}
+				}
+			}
+			return $value;
+		}
+	}
+	return null;
+}
 
 set_exception_handler('exception_handler');
 define('SERVER_REQUEST_URI_PARSED', trim(preg_replace('/' . preg_quote(EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL), '/') . '/', "", SERVER_REQUEST_URI), "\t\n\r\0\x0B/ "));
