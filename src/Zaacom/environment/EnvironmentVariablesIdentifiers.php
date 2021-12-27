@@ -2,20 +2,18 @@
 
 namespace Zaacom\environment;
 
-use Zaacom\helper\BasicEnumClass;
+enum EnvironmentVariablesIdentifiers: string {
+    case APP_NAME = "APP_NAME";
+	case VERSION = "VERSION";
 
-abstract class EnvironmentVariablesIdentifiers extends BasicEnumClass {
-    const APP_NAME = "APP_NAME";
-    const VERSION = "VERSION";
+	case DB_CONNECTION = "DB_CONNECTION";
+	case DB_HOST = "DB_HOST";
+	case DB_PORT = "DB_PORT";
+	case DB_DATABASES = "DB_DATABASES";
+	case DB_USERNAME = "DB_USERNAME";
+	case DB_PASSWORD = "DB_PASSWORD";
 
-    const DB_CONNECTION = "DB_CONNECTION";
-    const DB_HOST = "DB_HOST";
-    const DB_PORT = "DB_PORT";
-    const DB_DATABASES = "DB_DATABASES";
-    const DB_USERNAME = "DB_USERNAME";
-    const DB_PASSWORD = "DB_PASSWORD";
+	case MODE_DEBUG = "MODE_DEBUG";
 
-    const MODE_DEBUG = "MODE_DEBUG";
-
-    const BASE_URL = "BASE_URL";
+	case BASE_URL = "BASE_URL";
 }
