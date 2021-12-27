@@ -98,8 +98,11 @@ function print_readable(...$values)
 	zzzPrintReadableArray($values);
 }
 
-function get_protected_data(string $key, array $from = [$_POST, $_GET]): array|\Zaacom\helper\DateTime|string|int|float|null
+function get_protected_data(string $key, ?array $from = null): array|\Zaacom\helper\DateTime|string|int|float|null
 {
+	if ($from === null) {
+		$from = [$_POST, $_GET];
+	}
 	foreach ($from as $array) {
 		if (array_key_exists($key, $array)) {
 			$value = $array[$key];
@@ -107,15 +110,14 @@ function get_protected_data(string $key, array $from = [$_POST, $_GET]): array|\
 				$value = trim($value);
 				if (!empty($value)) {
 					try {
-						$datetime = new \Zaacom\helper\DateTime($value);
 						$numberMatchesInt = preg_match("/^-?[0-9]*$/", $value, $matches);
 						$numberMatchesFloat = preg_match("/^-?[0-9]*(.|,)?[0-9]*$/", $value, $matches);
-						if ($datetime->isValidDateTime()) {
-							$value = $datetime;
-						} elseif ($numberMatchesInt === 1) {
+						if ($numberMatchesInt === 1) {
 							$value = intval($value);
 						} elseif ($numberMatchesFloat === 1) {
 							$value = floatval($value);
+						} elseif (($datetime = new \Zaacom\helper\DateTime($value))->isValidDateTime()) {
+							$value = $datetime;
 						}
 					} catch (\Throwable $th) {
 
