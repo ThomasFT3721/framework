@@ -3,9 +3,9 @@
 namespace Zaacom\routing;
 
 use Exception;
+use JetBrains\PhpStorm\NoReturn;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
-use Zaacom\exception\InvalidNumberArguments;
 use Zaacom\exception\InvalidNumberArgumentsException;
 use Zaacom\exception\UnknownRouteException;
 
@@ -27,7 +27,7 @@ abstract class Router
 	private static function includeRoutes()
 	{
 		if (!defined("ROOT_DIR")) {
-			define("ROOT_DIR", __DIR__ . "/../../../../../..");
+			define("ROOT_DIR", __DIR__ . "/../../../../../thomasft");
 		}
 		require_once __DIR__ . '/admin.php';
 		if (!is_dir(ROOT_DIR . "/routes")) {
@@ -103,13 +103,13 @@ abstract class Router
 				return EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL) . "/" . $route->getPathFormatted($args);
 			}
 		}
-		throw new \Exception("Route not found for '$name'");
+		throw new Exception("Route not found for '$name'");
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public static function redirectTo(string $name, array $args = [], string $method = RouteMethodEnum::GET)
+	#[NoReturn] public static function redirectTo(string $name, array $args = [], string $method = RouteMethodEnum::GET): void
 	{
 		header("Location: ".self::getRouteUrl($name, $args, $method));
 		exit();

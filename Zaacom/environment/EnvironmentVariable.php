@@ -31,7 +31,7 @@ abstract class EnvironmentVariable
 	private static function initEnvironmentVariables()
 	{
 		if (!defined("ROOT_DIR")) {
-			define("ROOT_DIR", __DIR__ . "/../../../../../..");
+			define("ROOT_DIR", __DIR__ . "/../../../..");
 		}
 		if (!file_exists(ROOT_DIR . "/.env")) {
 			$env = new FileGenerator(".env", content: "");

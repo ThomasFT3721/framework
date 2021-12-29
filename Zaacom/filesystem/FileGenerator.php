@@ -93,7 +93,7 @@ class FileGenerator
 	{
 
 		if (!defined("ROOT_DIR")) {
-			define("ROOT_DIR", __DIR__ . "/../../../../../..");
+			define("ROOT_DIR", __DIR__ . "/../../../../../thomasft");
 		}
 		if ((!empty($this->basePath) || !empty($this->path)) && !is_dir(ROOT_DIR . $this->basePath . $this->path)) {
 			if (mkdir(ROOT_DIR . $this->basePath . $this->path, 0777, true) === false) {

@@ -13,7 +13,7 @@
     "description": "Zaacom framework",
     "autoload": {
         "psr-4": {
-            "Zaacom\\": "src/Zaacom"
+            "Zaacom\\": "Zaacom"
         }
     },
     "require": {

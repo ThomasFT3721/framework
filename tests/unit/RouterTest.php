@@ -25,9 +25,15 @@ class RouterTest extends Unit
 		$this->tester->assertArrayHasKey(RouteMethodEnum::POST, Router::getRoutes());
 	}
 
+	public function testGetRouteUrlPOST()
+	{
+		Route::post(["/route"], ["c", "d"], ["name" => "route_name"]);
+		$this->tester->assertEquals("/route", Router::getRouteUrl("route_name", method: RouteMethodEnum::POST));
+	}
+
 	public function testGetRoutesThrowable()
 	{
-		$this->tester->expectThrowable(\Exception::class, function() {
+		$this->tester->expectThrowable(\Exception::class, function () {
 			Router::getRoutes("UNKNOWN");
 		});
 	}
