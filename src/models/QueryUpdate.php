@@ -130,9 +130,10 @@ class QueryUpdate implements QueryInterface
             $where .= "$comparator ";
         }
 
-		$where .= match (gettype($value)) {
+		$where .= ":P" . count($this->params) . "P";
+
+		$this->params[":P" . count($this->params) . "P"] = match (gettype($value)) {
 			'string' => "'$value'",
-			'int' => "$value",
 			'array' => "(" . implode(",", $value) . ")",
 			default => "$value",
 		};
