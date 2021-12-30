@@ -54,7 +54,7 @@ class QueryInsert implements QueryInterface
 	 */
 	public function execute(): PDOStatement
     {
-        return Database::executerRequete($this->database, $this->buildQuery(), $this->params);
+        return DataBase::executerRequete($this->database, $this->buildQuery(), $this->params);
     }
 
     public function buildQuery(): string

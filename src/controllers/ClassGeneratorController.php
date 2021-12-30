@@ -8,7 +8,7 @@ use Zaacom\environment\EnvironmentVariablesIdentifiers;
 use Zaacom\models\ClassBuilder;
 use Zaacom\models\ClassField;
 use Zaacom\models\ClassFieldLink;
-use Zaacom\models\Database;
+use Zaacom\models\DataBase;
 use Zaacom\views\ViewHandler;
 
 class ClassGeneratorController extends BaseController
@@ -19,7 +19,7 @@ class ClassGeneratorController extends BaseController
 		$databases = json_decode(EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES));
 		$classList = [];
 		foreach ($databases as $databaseName) {
-			$tableNames = Database::getValues("information_schema", "SELECT `table_name` FROM `TABLES` WHERE `TABLE_SCHEMA` LIKE '$databaseName'");
+			$tableNames = DataBase::getValues("information_schema", "SELECT `table_name` FROM `TABLES` WHERE `TABLE_SCHEMA` LIKE '$databaseName'");
 			$classList[$databaseName] = [];
 			foreach ($tableNames as $tableName) {
 				$classList[$databaseName][$tableName] = (new ClassBuilder($tableName, $databaseName))->classGenerator->fileExist();
@@ -35,12 +35,12 @@ class ClassGeneratorController extends BaseController
 		if (array_key_exists('class', $_POST)) {
 			foreach ($databases as $databaseName) {
 				if (array_key_exists($databaseName, $_POST['class'])) {
-					$tableNames = Database::getValues("information_schema", "SELECT `table_name` FROM `TABLES` WHERE `TABLE_SCHEMA` LIKE '$databaseName'");
+					$tableNames = DataBase::getValues("information_schema", "SELECT `table_name` FROM `TABLES` WHERE `TABLE_SCHEMA` LIKE '$databaseName'");
 					foreach ($tableNames as $tableName) {
 						if (array_key_exists($tableName, $_POST['class'][$databaseName])) {
 							$classBuilder = new ClassBuilder($tableName, $databaseName);
 
-							$columns = Database::getData("information_schema", "SELECT * FROM `COLUMNS` WHERE `TABLE_SCHEMA` LIKE '$databaseName' AND `TABLE_NAME` LIKE '$tableName' ORDER BY `ordinal_position` ASC");
+							$columns = DataBase::getData("information_schema", "SELECT * FROM `COLUMNS` WHERE `TABLE_SCHEMA` LIKE '$databaseName' AND `TABLE_NAME` LIKE '$tableName' ORDER BY `ordinal_position` ASC");
 							foreach ($columns as $column) {
 								$fields = [];
 								$field = new ClassField($databaseName, $column['COLUMN_NAME'], $column["DATA_TYPE"], $column["COLUMN_TYPE"], $column['COLUMN_NAME'], $column["IS_NULLABLE"] != "NO");
@@ -53,14 +53,14 @@ class ClassGeneratorController extends BaseController
 									$field->addComment($column["COLUMN_COMMENT"]);
 								}
 
-								$link = Database::getData("information_schema", "SELECT * FROM `KEY_COLUMN_USAGE` WHERE `TABLE_SCHEMA` LIKE '$databaseName' AND `TABLE_NAME` LIKE '$tableName' AND `CONSTRAINT_NAME` NOT LIKE 'PRIMARY' AND `COLUMN_NAME` LIKE '" . $column["COLUMN_NAME"] . "'");
+								$link = DataBase::getData("information_schema", "SELECT * FROM `KEY_COLUMN_USAGE` WHERE `TABLE_SCHEMA` LIKE '$databaseName' AND `TABLE_NAME` LIKE '$tableName' AND `CONSTRAINT_NAME` NOT LIKE 'PRIMARY' AND `COLUMN_NAME` LIKE '" . $column["COLUMN_NAME"] . "'");
 								if (count($link) > 0) {
 									$link = $link[0];
 									$field->setLink(new ClassFieldLink($link['REFERENCED_TABLE_SCHEMA'], $link['REFERENCED_TABLE_NAME'], $link['REFERENCED_COLUMN_NAME']));
 								}
 								$fields[] = $field;
 
-								$links = Database::getData("information_schema", "SELECT * FROM `KEY_COLUMN_USAGE` WHERE `REFERENCED_TABLE_SCHEMA` LIKE '$databaseName' AND `REFERENCED_TABLE_NAME` LIKE '$tableName' AND `REFERENCED_COLUMN_NAME` LIKE '" . $column["COLUMN_NAME"] . "'");
+								$links = DataBase::getData("information_schema", "SELECT * FROM `KEY_COLUMN_USAGE` WHERE `REFERENCED_TABLE_SCHEMA` LIKE '$databaseName' AND `REFERENCED_TABLE_NAME` LIKE '$tableName' AND `REFERENCED_COLUMN_NAME` LIKE '" . $column["COLUMN_NAME"] . "'");
 
 								if (count($links) > 0) {
 									foreach ($links as $link) {

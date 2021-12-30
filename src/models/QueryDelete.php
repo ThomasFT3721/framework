@@ -10,37 +10,38 @@ use Zaacom\environment\EnvironmentVariablesIdentifiers;
 
 class QueryDelete implements QueryInterface
 {
-    private string $query = "not implemented";
-    private ?string $table = null;
+	private string $query = "not implemented";
+	private ?string $table = null;
 
-    private ?string $where = "1";
-    private ?int $limit = null;
-    private ?int $offset = null;
+	private ?string $where = "1";
+	public array $whereParameters = [];
+	private ?int $limit = null;
+	private ?int $offset = null;
 
-    private string $database;
+	private string $database;
 
-    private function __construct(string $database)
-    {
-        $this->database = $database;
-    }
+	private function __construct(string $database)
+	{
+		$this->database = $database;
+	}
 
 	/**
 	 * @throws Exception
 	 */
 	public static function create(?string $database = null): self
-    {
-        if ($database === null) {
-            $database = json_decode(EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES))[0];
-        }
-        return new self($database);
-    }
+	{
+		if ($database === null) {
+			$database = json_decode(EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES))[0];
+		}
+		return new self($database);
+	}
 
-    public function setTable($table): self
-    {
-        $this->table = $table;
+	public function setTable($table): self
+	{
+		$this->table = $table;
 
-        return $this;
-    }
+		return $this;
+	}
 
 	/**
 	 * Add where clause
@@ -74,146 +75,152 @@ class QueryDelete implements QueryInterface
 	 * @return QueryDelete
 	 * @throws Exception
 	 */
-    public function where(mixed ...$parameters): self
-    {
-        if (count($parameters) != 0) {
-            if (!is_array($parameters[0])) {
-                $parameters = [[$parameters]];
-            } else if (!is_array($parameters[0][0])) {
-                $parameters = [$parameters];
-            }
+	public function where(mixed ...$parameters): self
+	{
+		if (count($parameters) != 0) {
+			if (!is_array($parameters[0])) {
+				$parameters = [[$parameters]];
+			} elseif (!is_array($parameters[0][0])) {
+				$parameters = [$parameters];
+			}
 
-            $where = "";
+			$where = "";
 
-            foreach ($parameters as $paramsList) {
-                foreach ($paramsList as $params) {
-                    if (count($params) == 2) {
-                        $where .= $this->buildWhere('AND', ...$params);
-                    } else if (count($params) == 3) {
-                        $where .= $this->buildWhere('AND', $params[0], $params[2], $params[1]);
-                    } else {
-                        throw new Exception("Error Processing Request");
-                    }
-                }
-            }
+			foreach ($parameters as $paramsList) {
+				foreach ($paramsList as $params) {
+					if (count($params) == 2) {
+						$where .= $this->buildWhere('AND', ...$params);
+					} elseif (count($params) == 3) {
+						$where .= $this->buildWhere('AND', $params[0], $params[2], $params[1]);
+					} else {
+						throw new Exception("Error Processing Request");
+					}
+				}
+			}
 
-            $this->where .= $where;
-        }
+			$this->where .= $where;
+		}
 
 
-        return $this;
-    }
+		return $this;
+	}
 
-    private function buildWhere(string $andOr, string $key, $value, ?string $comparator = null): string
-    {
-        $where = " $andOr $key ";
+	private function buildWhere(string $andOr, string $key, $value, ?string $comparator = null): string
+	{
+		$where = " $andOr $key ";
 
-        if ($comparator === null) {
+		if ($comparator === null) {
 			$where .= match (gettype($value)) {
 				'string' => "LIKE ",
 				'int' => "= ",
 				'array' => "IN ",
 				default => "= ",
 			};
-        } else {
-            $where .= "$comparator ";
-        }
+		} else {
+			$where .= "$comparator ";
+		}
 
-		$where .= match (gettype($value)) {
-			'string' => "'$value'",
-			'int' => "$value",
-			'array' => "(" . implode(",", $value) . ")",
-			default => "$value",
-		};
+		if (gettype($value) === "array") {
+			$keys = [];
+			foreach ($value as $val) {
+				$key = ":P" . count($this->whereParameters) . "P";
+				$keys[] = $key;
+				$this->whereParameters[$key] = $val;
+			}
+			$where .= "(" . implode(",", $keys) . ")";
+		} else {
+			$where .= ":P" . count($this->whereParameters) . "P";
+			$this->whereParameters[":P" . count($this->whereParameters) . "P"] = $value;
+		}
 
-        return $where;
-    }
+		return $where;
+	}
 
 	/**
 	 * @throws Exception
 	 */
 	public function orWhere(mixed ...$parameters): self
-    {
-        if (count($parameters) == 0) {
-            if (!is_array($parameters[0])) {
-                $parameters = [[$parameters]];
-            } else if (!is_array($parameters[0][0])) {
-                $parameters = [$parameters];
-            }
+	{
+		if (count($parameters) == 0) {
+			if (!is_array($parameters[0])) {
+				$parameters = [[$parameters]];
+			} elseif (!is_array($parameters[0][0])) {
+				$parameters = [$parameters];
+			}
 
-            if ($this->where == "1") {
-                $this->where = "0";
-            }
+			if ($this->where == "1") {
+				$this->where = "0";
+			}
 
-            $where = " OR (1";
+			$where = " OR (1";
 
-            foreach ($parameters as $paramsList) {
-                foreach ($paramsList as $params) {
-                    if (count($params) == 2) {
-                        $where .= $this->buildWhere('AND', ...$params);
-                    } else if (count($params) == 3) {
-                        $where .= $this->buildWhere('AND', $params[0], $params[2], $params[1]);
-                    } else {
-                        throw new Exception("Error Processing Request");
-                    }
-                }
-            }
+			foreach ($parameters as $paramsList) {
+				foreach ($paramsList as $params) {
+					if (count($params) == 2) {
+						$where .= $this->buildWhere('AND', ...$params);
+					} elseif (count($params) == 3) {
+						$where .= $this->buildWhere('AND', $params[0], $params[2], $params[1]);
+					} else {
+						throw new Exception("Error Processing Request");
+					}
+				}
+			}
 
-            $this->where .= $where . ")";
-        }
+			$this->where .= $where . ")";
+		}
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function limit(int $limit): self
-    {
-        $this->limit = $limit;
+	public function limit(int $limit): self
+	{
+		$this->limit = $limit;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function offset(int $offset): self
-    {
-        $this->offset = $offset;
+	public function offset(int $offset): self
+	{
+		$this->offset = $offset;
 
-        return $this;
-    }
+		return $this;
+	}
 
 
 	/**
 	 * @throws Throwable
 	 */
 	public function execute(): PDOStatement
-    {
-        return Database::executerRequete($this->database, $this->buildQuery());
-    }
+	{
+		return DataBase::executerRequete($this->database, $this->buildQuery());
+	}
 
-    public function buildQuery(): string
-    {
-        if ($this->table === null) {
-            throw new \InvalidArgumentException("`table` query must not be null");
-        }
+	public function buildQuery(): string
+	{
+		if ($this->table === null) {
+			throw new \InvalidArgumentException("`table` query must not be null");
+		}
 
-        $query = "DELETE FROM `" . $this->table . "`";
+		$query = "DELETE FROM `" . $this->table . "`";
 
-        if ($this->where !== null) {
-            $query .= " WHERE " . $this->where;
-        }
-        if ($this->limit !== null) {
-            $query .= " LIMIT " . $this->limit;
-        }
-        if ($this->offset !== null) {
-            $query .= " OFFSET " . $this->offset;
-        }
+		if ($this->where !== null) {
+			$query .= " WHERE " . $this->where;
+		}
+		if ($this->limit !== null) {
+			$query .= " LIMIT " . $this->limit;
+		}
+		if ($this->offset !== null) {
+			$query .= " OFFSET " . $this->offset;
+		}
 
-        $this->query = $query;
+		$this->query = $query;
 
-        //echo "<br><br>$query<br><br>";
-        return $query;
-    }
+		//echo "<br><br>$query<br><br>";
+		return $query;
+	}
 
-    public function __toString(): string
-    {
-        return $this->query;
-    }
+	public function __toString(): string
+	{
+		return $this->query;
+	}
 }

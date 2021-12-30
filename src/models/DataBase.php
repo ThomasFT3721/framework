@@ -11,7 +11,7 @@ use Throwable;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
 
-class Database
+class DataBase
 {
 
     private static array $connexions = [];
@@ -24,7 +24,7 @@ class Database
 	 * @param array  $params   parameters
 	 *
 	 * @return PDOStatement
-	 * @throws Throwable
+	 * @throws \Throwable
 	 */
     public static function executerRequete(string $database, string $sql, array $params = []): PDOStatement
 	{

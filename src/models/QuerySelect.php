@@ -116,13 +116,18 @@ class QuerySelect implements QueryInterface
 			$where .= "$comparator ";
 		}
 
-		$where .= ":P" . count($this->whereParameters) . "P";
-
-		$this->whereParameters[":P" . count($this->whereParameters) . "P"] = match (gettype($value)) {
-			'string' => "'$value'",
-			'array' => "(" . implode(",", $value) . ")",
-			default => "$value",
-		};
+		if (gettype($value) === "array") {
+			$keys = [];
+			foreach ($value as $val) {
+				$key = ":P" . count($this->whereParameters) . "P";
+				$keys[] = $key;
+				$this->whereParameters[$key] = $val;
+			}
+			$where .= "(" . implode(",", $keys) . ")";
+		} else {
+			$where .= ":P" . count($this->whereParameters) . "P";
+			$this->whereParameters[":P" . count($this->whereParameters) . "P"] = $value;
+		}
 
 		return $where;
 	}
@@ -270,7 +275,7 @@ class QuerySelect implements QueryInterface
 			if ($whereParameters == null) {
 				$whereParameters = $this->whereParameters;
 			}
-			return Database::executerRequete($this->database, $query, $whereParameters);
+			return DataBase::executerRequete($this->database, $query, $whereParameters);
 		} catch (Throwable $th) {
 			throw new \PDOException("Error during execute request: " . $query, previous: $th);
 		}

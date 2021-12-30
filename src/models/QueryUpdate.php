@@ -130,13 +130,18 @@ class QueryUpdate implements QueryInterface
             $where .= "$comparator ";
         }
 
-		$where .= ":P" . count($this->params) . "P";
-
-		$this->params[":P" . count($this->params) . "P"] = match (gettype($value)) {
-			'string' => "'$value'",
-			'array' => "(" . implode(",", $value) . ")",
-			default => "$value",
-		};
+		if (gettype($value) === "array") {
+			$keys = [];
+			foreach ($value as $val) {
+				$key = ":P" . count($this->params) . "P";
+				$keys[] = $key;
+				$this->params[$key] = $val;
+			}
+			$where .= "(" . implode(",", $keys) . ")";
+		} else {
+			$where .= ":P" . count($this->params) . "P";
+			$this->params[":P" . count($this->params) . "P"] = $value;
+		}
 
         return $where;
     }
@@ -194,7 +199,7 @@ class QueryUpdate implements QueryInterface
 	 */
 	public function execute(): PDOStatement
     {
-        return Database::executerRequete($this->database, $this->buildQuery(), $this->params);
+        return DataBase::executerRequete($this->database, $this->buildQuery(), $this->params);
     }
 
     public function buildQuery(): string
