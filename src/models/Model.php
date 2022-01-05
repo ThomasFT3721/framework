@@ -21,5 +21,7 @@ interface Model
 
     public function delete(): bool;
 
-    public static function deleteAll(mixed ...$parameters): int;
+	public static function deleteAll(mixed ...$parameters): int;
+
+	public static function count(): int;
 }
