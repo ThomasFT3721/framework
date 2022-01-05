@@ -371,7 +371,7 @@ class ClassGenerator extends FileGenerator
 			->addBlankLine()
 			->addContentLine("public static function count(): int", 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->setTable(self::TABLE)->count();", 2)
+			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->count();", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public function __toString(): string", 1)
