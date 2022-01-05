@@ -283,7 +283,7 @@ class QuerySelect implements QueryInterface
 
 	public function count(): int
 	{
-		return $this->execute()->fetchAll()[0][0];
+		return $this->execute()->rowCount();
 	}
 
 	public function get(?string $class = null): mixed
