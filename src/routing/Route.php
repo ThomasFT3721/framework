@@ -7,62 +7,55 @@ use Exception;
 class Route
 {
 
-	private string $method;
+	private RouteMethodEnum $method;
 	private string $path;
 	private array|string $action;
-	private array $options;
+	public ?string $name = null;
+	public ?array $middleware = null;
 
 
-	public function __construct(string $method, string $path, array|string $action, array $options)
+	public function __construct(RouteMethodEnum $method, string $path, array|string $action)
 	{
 		$this->method = $method;
-		$this->path = trim($path, "\t\n\r\0\x0B/ ");
+		$this->path = trim($path, "\t\n\r\0\x0B ");
 		$this->action = $action;
-		$this->options = $options;
 	}
 
 
-	public static function post(array|string $path, array|string $action, array $options = []): array
+	public static function post(string $path, array|string $action): Route
 	{
-		return Route::add(RouteMethodEnum::POST, $path, $action, $options);
+		return Route::add(RouteMethodEnum::POST, $path, $action);
 	}
 
-	public static function get(array|string $path, array|string $action, array $options = []): array
+	public static function get(string $path, array|string $action): Route
 	{
-		return Route::add(RouteMethodEnum::GET, $path, $action, $options);
+		return Route::add(RouteMethodEnum::GET, $path, $action);
 	}
 
-	public static function put(array|string $path, array|string $action, array $options = []): array
+	public static function put(string $path, array|string $action): Route
 	{
-		return Route::add(RouteMethodEnum::PUT, $path, $action, $options);
+		return Route::add(RouteMethodEnum::PUT, $path, $action);
 	}
 
-	public static function delete(array|string $path, array|string $action, array $options = []): array
+	public static function delete(string $path, array|string $action): Route
 	{
-		return Route::add(RouteMethodEnum::DELETE, $path, $action, $options);
+		return Route::add(RouteMethodEnum::DELETE, $path, $action);
 	}
 
-	public static function patch(array|string $path, array|string $action, array $options = []): array
+	public static function patch(string $path, array|string $action): Route
 	{
-		return Route::add(RouteMethodEnum::PATCH, $path, $action, $options);
+		return Route::add(RouteMethodEnum::PATCH, $path, $action);
 	}
 
-	private static function add(string $method, array|string $path, array|string $action, array $options = []): array
+	private static function add(RouteMethodEnum $method, string $path, array|string $action): Route
 	{
-		if (gettype($path) == 'string') {
-			$path = [$path];
-		}
-		$routes = [];
-		foreach ($path as $p) {
-			$routes[] = Router::add($method, $p, $action, $options);
-		}
-		return $routes;
+		return Router::add($method, $path, $action);
 	}
 
 	/**
 	 * Get the value of method
 	 */
-	public function getMethod(): string
+	public function getMethod(): RouteMethodEnum
 	{
 		return $this->method;
 	}
@@ -83,21 +76,35 @@ class Route
 	public function getPathFormatted(array $args = []): string
 	{
 		$path = $this->getPath();
-		preg_match_all("/\{([^}]*)\}/m", $path, $matches);
-		if (count($matches[0]) > 0) {
-			foreach ($matches[0] as $key => $match) {
-				if (!array_key_exists($matches[1][$key], $args)) {
-					throw new Exception("Unknow key '" . $matches[1][$key] . "' for route " . $this->getOption("name"));
-				}
-				$path = str_replace($match, $args[$matches[1][$key]], $path);
-			}
+		preg_match_all("/\([^)]*\)/", $path, $matches);
+		$matches = $matches[0];
+		foreach ($matches as $key => $match) {
+			$path = str_replace($match, $args[$key], $path);
 		}
+
 		return $path;
 	}
 
 	public function getRegexPath(): string
 	{
-		return "/" . preg_replace("/\\\{[^}]*\\\}/", "([^-\\/]*)", preg_quote($this->getPath(), "/")) . "/";
+		return "/^" . str_replace("/", "\/", $this->getPath()) . "$/";
+	}
+
+	public function matchWith(string $url): array|bool
+	{
+		preg_match_all($this->getRegexPath(), $url, $matches);
+		if (count($matches[0]) == 0) {
+			return false;
+		}
+		$parameters = [];
+		unset($matches[0]);
+
+		foreach ($matches as $match) {
+			if ($match[0] != "") {
+				$parameters[] = $match[0];
+			}
+		}
+		return $parameters;
 	}
 
 	/**
@@ -108,22 +115,35 @@ class Route
 		return $this->action;
 	}
 
-	/**
-	 * Get the value of options
-	 */
-	public function getOptions(): array
+	public function name(string $name): Route
 	{
-		return $this->options;
+		$this->name = $name;
+		Router::updateRoute("name", $name);
+
+		return $this;
 	}
 
 	/**
-	 * Get the value of options
+	 * @return string|null
 	 */
-	public function getOption($key)
+	public function getName(): ?string
 	{
-		if (!array_key_exists($key, $this->getOptions())) {
-			return null;
-		}
-		return $this->getOptions()[$key];
+		return $this->name;
+	}
+
+	public function middleware(array $middleware): Route
+	{
+		$this->middleware = $middleware;
+		Router::updateRoute("middleware", $middleware);
+
+		return $this;
+	}
+
+	/**
+	 * @return array|null
+	 */
+	public function getMiddleware(): ?array
+	{
+		return $this->middleware;
 	}
 }

@@ -62,8 +62,15 @@ class ViewHandler
 		$twig->addFunction(new TwigFunction('CURRENT_URL', function () {
 			return SERVER_REQUEST_URI_PARSED;
 		}));
-		$twig->addFunction(new TwigFunction('route', function (string $name, array $args = [], string $method = RouteMethodEnum::GET) {
-			return Router::getRouteUrl($name, $args, $method);
+		$twig->addFunction(new TwigFunction('route', function (string $name, array $args = [], string $method = "GET") {
+			foreach (RouteMethodEnum::cases() as $case) {
+				if ($method == $case->name) {
+					$method = $case;
+					break;
+				}
+			}
+			print_r($method);
+			return Router::getRouteUrlByRouteName($name, $args, $method);
 		}));
 	}
 

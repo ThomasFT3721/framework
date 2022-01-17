@@ -16,7 +16,7 @@ class ClassGeneratorController extends BaseController
 
 	public function index()
 	{
-		$databases = json_decode(EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES));
+		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
 		$classList = [];
 		foreach ($databases as $databaseName) {
 			$tableNames = DataBase::getValues("information_schema", "SELECT `table_name` FROM `TABLES` WHERE `TABLE_SCHEMA` LIKE '$databaseName'");

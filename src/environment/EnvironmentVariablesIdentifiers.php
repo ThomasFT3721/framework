@@ -2,20 +2,67 @@
 
 namespace Zaacom\environment;
 
-use Zaacom\helper\BasicEnumClass;
+enum EnvironmentVariablesIdentifiers
+{
+	case APP_NAME;
+	case VERSION;
 
-abstract class EnvironmentVariablesIdentifiers extends BasicEnumClass {
-	const APP_NAME = "APP_NAME";
-	const VERSION = "VERSION";
+	case DB_CONNECTION;
+	case DB_HOST;
+	case DB_PORT;
+	case DB_DATABASES;
+	case DB_USERNAME;
+	case DB_PASSWORD;
 
-	const DB_CONNECTION = "DB_CONNECTION";
-	const DB_HOST = "DB_HOST";
-	const DB_PORT = "DB_PORT";
-	const DB_DATABASES = "DB_DATABASES";
-	const DB_USERNAME = "DB_USERNAME";
-	const DB_PASSWORD = "DB_PASSWORD";
+	case MODE_DEBUG;
 
-	const MODE_DEBUG = "MODE_DEBUG";
+	case BASE_URL;
 
-	const BASE_URL = "BASE_URL";
+	public function defaultValues(): string|array|bool|int
+	{
+		return match ($this) {
+			EnvironmentVariablesIdentifiers::APP_NAME => "",
+			EnvironmentVariablesIdentifiers::VERSION => "0.0.1",
+			EnvironmentVariablesIdentifiers::DB_CONNECTION => "mysql",
+			EnvironmentVariablesIdentifiers::DB_HOST => "127.0.0.1",
+			EnvironmentVariablesIdentifiers::DB_PORT => 3306,
+			EnvironmentVariablesIdentifiers::DB_DATABASES => [],
+			EnvironmentVariablesIdentifiers::DB_USERNAME => "root",
+			EnvironmentVariablesIdentifiers::DB_PASSWORD => "",
+			EnvironmentVariablesIdentifiers::MODE_DEBUG => true,
+			EnvironmentVariablesIdentifiers::BASE_URL => "",
+		};
+	}
+
+	public function comment(): string
+	{
+		return match ($this) {
+			EnvironmentVariablesIdentifiers::APP_NAME => "",
+			EnvironmentVariablesIdentifiers::VERSION => "",
+			EnvironmentVariablesIdentifiers::DB_CONNECTION => "",
+			EnvironmentVariablesIdentifiers::DB_HOST => "",
+			EnvironmentVariablesIdentifiers::DB_PORT => "",
+			EnvironmentVariablesIdentifiers::DB_DATABASES => "",
+			EnvironmentVariablesIdentifiers::DB_USERNAME => "",
+			EnvironmentVariablesIdentifiers::DB_PASSWORD => "",
+			EnvironmentVariablesIdentifiers::MODE_DEBUG => "true|false",
+			EnvironmentVariablesIdentifiers::BASE_URL => "",
+		};
+	}
+
+	public function example(): string|array|bool|int
+	{
+		return match ($this) {
+			EnvironmentVariablesIdentifiers::APP_NAME => "framework",
+			EnvironmentVariablesIdentifiers::VERSION => "0.0.1",
+			EnvironmentVariablesIdentifiers::DB_CONNECTION => "mysql",
+			EnvironmentVariablesIdentifiers::DB_HOST => "127.0.0.1",
+			EnvironmentVariablesIdentifiers::DB_PORT => 3306,
+			EnvironmentVariablesIdentifiers::DB_DATABASES => ["database_name"],
+			EnvironmentVariablesIdentifiers::DB_USERNAME => "root",
+			EnvironmentVariablesIdentifiers::DB_PASSWORD => "",
+			EnvironmentVariablesIdentifiers::MODE_DEBUG => true,
+			EnvironmentVariablesIdentifiers::BASE_URL => "",
+		};
+	}
 }
