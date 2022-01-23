@@ -44,7 +44,7 @@ class ViewHandler
 			$context['_base_file'] = $twig->load($base_file);
 		}
 		$context['_page_title'] = $page_title;
-		echo $twig->display($name, $context);
+		$twig->display($name, $context);
 
 		return true;
 	}
@@ -69,7 +69,6 @@ class ViewHandler
 					break;
 				}
 			}
-			print_r($method);
 			return Router::getRouteUrlByRouteName($name, $args, $method);
 		}));
 	}

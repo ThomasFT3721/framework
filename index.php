@@ -136,7 +136,7 @@ define('SERVER_REQUEST_URI_PARSED', trim(preg_replace('/' . preg_quote(Environme
 ob_start();
 try {
 	session_start();
-	Router::run();
+	Router::run(SERVER_REQUEST_URI_PARSED);
 	echo ob_get_clean();
 } catch (\Throwable $th) {
 	throw $th;
