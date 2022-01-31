@@ -6,6 +6,10 @@ namespace Zaacom\models;
 use Exception;
 use Zaacom\filesystem\ClassGenerator;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class ClassBuilder
 {
 

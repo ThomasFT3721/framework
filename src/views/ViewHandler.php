@@ -15,6 +15,10 @@ use Zaacom\environment\EnvironmentVariablesIdentifiers;
 use Zaacom\routing\RouteMethodEnum;
 use Zaacom\routing\Router;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class ViewHandler
 {
 	/**

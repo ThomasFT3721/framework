@@ -3,6 +3,10 @@
 namespace Zaacom\controllers;
 
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class FolderGeneratorController extends BaseController
 {
 

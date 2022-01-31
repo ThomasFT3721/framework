@@ -4,6 +4,10 @@ namespace Zaacom\controllers;
 
 use BadMethodCallException;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 abstract class BaseController
 {
 	public function index()

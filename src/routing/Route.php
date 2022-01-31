@@ -4,6 +4,10 @@ namespace Zaacom\routing;
 
 use Exception;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class Route
 {
 
@@ -11,7 +15,7 @@ class Route
 	private string $path;
 	private array|string $action;
 	public ?string $name = null;
-	public ?array $middleware = null;
+	public ?array $middlewares = null;
 
 
 	public function __construct(RouteMethodEnum $method, string $path, array|string $action)
@@ -131,10 +135,13 @@ class Route
 		return $this->name;
 	}
 
-	public function middleware(array $middleware): Route
+	public function middleware(string $controller, string $method): Route
 	{
-		$this->middleware = $middleware;
-		Router::updateRoute("middleware", $middleware);
+		if ($this->middlewares == null) {
+			$this->middlewares = [];
+		}
+		$this->middlewares[] = [$controller, $method];
+		Router::updateRoute("middlewares", $this->middlewares);
 
 		return $this;
 	}
@@ -142,8 +149,17 @@ class Route
 	/**
 	 * @return array|null
 	 */
-	public function getMiddleware(): ?array
+	public function getMiddlewares(): ?array
 	{
-		return $this->middleware;
+		return $this->middlewares;
+	}
+
+	public function runMiddlewares()
+	{
+		if ($this->getMiddlewares() != null) {
+			foreach ($this->getMiddlewares() as $middleware) {
+				call_user_func_array([new ($middleware[0]), $middleware[1]], []);
+			}
+		}
 	}
 }

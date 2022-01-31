@@ -4,6 +4,10 @@ namespace Zaacom\models;
 
 use Zaacom\helper\DateTime;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class ClassField
 {
     const TYPES_ASSOC = [

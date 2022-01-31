@@ -4,6 +4,10 @@ namespace Zaacom\models;
 
 use PDOStatement;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 interface QueryInterface
 {
     public static function create(?string $database): self;

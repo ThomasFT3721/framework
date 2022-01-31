@@ -4,6 +4,10 @@ namespace Zaacom\exception;
 
 use JetBrains\PhpStorm\Pure;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class InvalidNumberArgumentsException extends \Exception
 {
 

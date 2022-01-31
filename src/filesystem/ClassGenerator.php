@@ -15,6 +15,10 @@ use Zaacom\models\QueryInsert;
 use Zaacom\models\QuerySelect;
 use Zaacom\models\QueryUpdate;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class ClassGenerator extends FileGenerator
 {
 

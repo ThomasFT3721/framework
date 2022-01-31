@@ -4,6 +4,10 @@ namespace Zaacom\exception;
 
 use JetBrains\PhpStorm\Pure;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class RouteMethodNotFoundException extends \Exception
 {
 	public function __construct(string $name, array $existingRouteMethod, $code = 0, \Throwable $previous = null)

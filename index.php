@@ -134,10 +134,6 @@ set_exception_handler('exception_handler');
 define('SERVER_REQUEST_URI_PARSED', trim(preg_replace('/' . preg_quote(EnvironmentVariable::get(EnvironmentVariablesIdentifiers::BASE_URL), '/') . '/', "", SERVER_REQUEST_URI), "\t\n\r\0\x0B/ "));
 
 ob_start();
-try {
-	session_start();
-	Router::run(SERVER_REQUEST_URI_PARSED);
-	echo ob_get_clean();
-} catch (\Throwable $th) {
-	throw $th;
-}
+session_start();
+Router::run('/' . SERVER_REQUEST_URI_PARSED);
+echo ob_get_clean();

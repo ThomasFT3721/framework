@@ -4,6 +4,10 @@ namespace Zaacom\filesystem;
 
 use Exception;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class FileGenerator
 {
 

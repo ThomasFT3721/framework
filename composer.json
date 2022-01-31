@@ -1,29 +1,29 @@
 {
-    "name": "zaacom/framework",
-    "authors": [
-        {
-            "name": "Thomas FONTAINE--TUFFERY",
-            "email": "thomas-fontaine@zaacom.com"
-        },
-        {
-            "name": "Quentin GORAK",
-            "email": "quentin-gorak@zaacom.com"
-        }
-    ],
-    "description": "Zaacom framework",
-    "autoload": {
-        "psr-4": {
-            "Zaacom\\": "src"
-        }
+  "name": "zaacom/framework",
+  "authors": [
+    {
+      "name": "Thomas FONTAINE--TUFFERY",
+      "email": "thomas-fontaine@zaacom.com"
     },
-    "require": {
-        "twig/twig": "^3.3"
-    },
-    "require-dev": {
-        "codeception/codeception": "4.1.22",
-        "codeception/module-phpbrowser": "^1.0",
-        "codeception/module-asserts": "^1.3",
-        "codeception/module-cli": "^1.1",
-        "codeception/module-webdriver": "^1.2"
+    {
+      "name": "Quentin GORAK",
+      "email": "quentin-gorak@zaacom.com"
     }
+  ],
+  "description": "Zaacom framework",
+  "autoload": {
+    "psr-4": {
+      "Zaacom\\": "src"
+    }
+  },
+  "require": {
+    "twig/twig": "^3.3"
+  },
+  "require-dev": {
+    "codeception/codeception": "4.1.22",
+    "codeception/module-phpbrowser": "^1.0",
+    "codeception/module-asserts": "^1.3",
+    "codeception/module-cli": "^1.1",
+    "codeception/module-webdriver": "^1.2"
+  }
 }

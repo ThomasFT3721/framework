@@ -12,6 +12,10 @@ use Zaacom\exception\RouteMethodNotFoundException;
 use Zaacom\exception\RouteNotFoundException;
 use Zaacom\exception\UnknownRouteException;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 abstract class Router
 {
 
@@ -61,6 +65,7 @@ abstract class Router
 		if (is_array($route->getAction()) && count($route->getAction()) != 2) {
 			throw new InvalidNumberArgumentsException($route->getAction(), 2);
 		}
+		$route->runMiddlewares();
 		call_user_func_array([new ($route->getAction()[0]), $route->getAction()[1]], $params);
 
 		return $route;

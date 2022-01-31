@@ -4,6 +4,10 @@ namespace Zaacom\exception;
 
 use JetBrains\PhpStorm\Pure;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class IndexOutOfBounds extends \Exception
 {
 	#[Pure] public function __construct(array $array, int $index, $code = 0, \Throwable $previous = null)

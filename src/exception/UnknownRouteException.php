@@ -4,6 +4,10 @@ namespace Zaacom\exception;
 
 use JetBrains\PhpStorm\Pure;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class UnknownRouteException extends \Exception
 {
 	#[Pure] public function __construct(string $url, $code = 0, \Throwable $previous = null)

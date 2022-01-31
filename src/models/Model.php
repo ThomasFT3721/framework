@@ -2,6 +2,10 @@
 
 namespace Zaacom\models;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 interface Model
 {
     /**

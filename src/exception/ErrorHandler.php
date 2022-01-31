@@ -4,6 +4,10 @@ namespace Zaacom\exception;
 
 use Zaacom\views\ViewHandler;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class ErrorHandler
 {
 	public static function report(\Throwable $th, string $content = "")

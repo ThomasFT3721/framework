@@ -4,8 +4,11 @@ namespace Zaacom\environment;
 
 use Exception;
 use Zaacom\filesystem\FileGenerator;
-use function PHPUnit\Framework\stringStartsWith;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 abstract class EnvironmentVariable
 {
 	private static array $ENV_VARIABLE = [];
@@ -90,17 +93,18 @@ abstract class EnvironmentVariable
 		$env = new FileGenerator(".env", content: "");
 		foreach ($array as $key => $value) {
 			$env->addContentLine("/**");
-			$env->addContentLine(" * comment:" . $value['comment']);
-			$env->addContentLine(" * default_value:" . $value['default_value']);
-			$env->addContentLine(" * example:" . $value['example']);
+			$env->addContentLine(" * comment:" . str_replace("\/", "/", $value['comment']));
+			$env->addContentLine(" * default_value:" . str_replace("\/", "/", $value['default_value']));
+			$env->addContentLine(" * example:" . str_replace("\/", "/", $value['example']));
 			$env->addContentLine(" **/");
-			$env->addContentLine("$key=" . $value['value']);
+			$env->addContentLine("$key=" . str_replace("\/", "/", $value['value']));
 			$env->addBlankLine();
 		}
 		$env->generate();
 	}
 
-	public static function clearEnvironmentVariables() {
+	public static function clearEnvironmentVariables()
+	{
 		self::$ENV_VARIABLE = [];
 	}
 }

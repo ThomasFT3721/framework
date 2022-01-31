@@ -5,6 +5,10 @@ namespace Zaacom\exception;
 use JetBrains\PhpStorm\Pure;
 use Zaacom\routing\RouteMethodEnum;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class RouteNotFoundException extends \Exception
 {
 	#[Pure]

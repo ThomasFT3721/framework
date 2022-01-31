@@ -10,14 +10,18 @@ use Throwable;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class QuerySelect implements QueryInterface
 {
-	private string $query = "not implemented";
+	private string $query = "";
 	private ?string $select = null;
 	private ?string $where = "1";
 	public array $whereParameters = [];
 	private ?string $from = null;
-	private ?string $orderBy = null;
+	private string $orderBy = "";
 	private ?string $groupBy = null;
 	private ?string $having = null;
 	private ?int $limit = null;
@@ -108,7 +112,6 @@ class QuerySelect implements QueryInterface
 		if ($comparator === null) {
 			$where .= match (gettype($value)) {
 				'string' => "LIKE ",
-				"integer" => "=",
 				'array' => "IN ",
 				default => "= ",
 			};
@@ -178,7 +181,7 @@ class QuerySelect implements QueryInterface
 
 	public function from(string $from): self
 	{
-		$this->from = $from;
+		$this->from = "`" . $from . "`";
 
 		return $this;
 	}
@@ -201,7 +204,7 @@ class QuerySelect implements QueryInterface
 		return $this;
 	}
 
-	public function orderBy(array|string $field, string $direction = "ASC"): self
+	public function orderBy(array|string $field, QueryOrderEnum $direction = QueryOrderEnum::ASC): self
 	{
 		if ($this->orderBy == null) {
 			$this->orderBy = "";
@@ -211,7 +214,7 @@ class QuerySelect implements QueryInterface
 		if (gettype($field) == "array") {
 			$field = implode("`.`", $field);
 		}
-		$this->orderBy .= "`$field` $direction";
+		$this->orderBy .= "`$field` " . $direction->value;
 
 		return $this;
 	}
@@ -253,6 +256,8 @@ class QuerySelect implements QueryInterface
 
 	/**
 	 * Set the value of class
+	 *
+	 * @param string $class
 	 *
 	 * @return  self
 	 */
@@ -336,10 +341,10 @@ class QuerySelect implements QueryInterface
 		}
 		$query = "SELECT " . $this->select . " FROM " . $this->from;
 
-		if ($this->where !== null && $this->where !== "") {
+		if ($this->where !== null && $this->where !== "1") {
 			$query .= " WHERE " . $this->where;
 		}
-		if ($this->orderBy !== null && $this->orderBy !== "") {
+		if ($this->orderBy !== "") {
 			$query .= " ORDER BY " . $this->orderBy;
 		}
 		if ($this->groupBy !== null && $this->groupBy !== "") {
@@ -363,6 +368,9 @@ class QuerySelect implements QueryInterface
 
 	public function __toString(): string
 	{
+		if ($this->query == "") {
+			$this->buildQuery();
+		}
 		return $this->query;
 	}
 }

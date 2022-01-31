@@ -11,6 +11,10 @@ use Zaacom\models\ClassFieldLink;
 use Zaacom\models\DataBase;
 use Zaacom\views\ViewHandler;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class ClassGeneratorController extends BaseController
 {
 

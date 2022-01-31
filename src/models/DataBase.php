@@ -11,6 +11,10 @@ use Throwable;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 class DataBase
 {
 

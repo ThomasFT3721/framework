@@ -2,6 +2,10 @@
 
 namespace Zaacom\routing;
 
+
+/**
+ * @author Thomas FONTAINE--TUFFERY
+ */
 enum RouteMethodEnum
 {
 	case POST;
