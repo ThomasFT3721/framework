@@ -3,7 +3,7 @@
 	<div class="rows">
 		{% for key,value in row.data %}
 		<div class="cell">{{key}}</div>
-		<div class="cell">{{value}}</div>
+		<div class="cell">{{value | json_encode}}</div>
 		{% endfor %}
 	</div>
 </div>

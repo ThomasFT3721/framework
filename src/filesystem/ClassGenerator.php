@@ -39,7 +39,7 @@ class ClassGenerator extends FileGenerator
 			->addBlankLine()
 			->addContentLine("namespace Models\\" . $this->namespace . ";")
 			->addBlankLine()
-			->addContentLine("class $className implements \\".Model::class)
+			->addContentLine("class $className implements \\" . Model::class)
 			->addContentLine("{")
 			->addContentLine("const DATABASE = \"$database\";", 1)
 			->addContentLine("const TABLE = \"$table\";", 1);
@@ -49,7 +49,7 @@ class ClassGenerator extends FileGenerator
 	{
 		$this->addBlankLine();
 
-		$assigned = $nullElements = $specialTypes = [];
+		$assigned = $nullElements = $specialTypes = $enumTypes = [];
 
 		foreach ($fieldList as $database => $fields) {
 			foreach ($fields as $field) {
@@ -58,6 +58,9 @@ class ClassGenerator extends FileGenerator
 
 				if (in_array($type, array_values(ClassField::TYPES_ASSOC))) {
 					$assigned[$name] = $field->getCanBeNull() || $field->getPrimary();
+				} elseif ($field->getEnumGenerator() !== null) {
+					$assigned[$name] = $field->getCanBeNull();
+					$enumTypes[$name] = "\\" . $field->getEnumGenerator()->getNamespace() . "\\" . $field->getEnumGenerator()->getClassName();
 				} else {
 					$nullElements[] = $field->getName() . "List";
 				}
@@ -89,6 +92,9 @@ class ClassGenerator extends FileGenerator
 			if (array_key_exists($name, $specialTypes)) {
 				$value = "new " . $specialTypes[$name] . "($value)";
 			}
+			if (array_key_exists($name, $enumTypes)) {
+				$value = $enumTypes[$name] . "::from($value)";
+			}
 			if ($canBeNull) {
 				$this
 					->addContentLine("\$obj->$name = array_key_exists(self::" . strtoupper($name) . ", \$params) ? $value : null;", 2);
@@ -109,7 +115,9 @@ class ClassGenerator extends FileGenerator
 		$name = $field->getName();
 		$type = $field->getType();
 
-		if (!in_array($type, array_values(ClassField::TYPES_ASSOC))) {
+		if ($field->getEnumGenerator() !== null) {
+			$type = "\\" . $field->getEnumGenerator()->getNamespace() . "\\" . $field->getEnumGenerator()->getClassName();
+		} elseif (!in_array($type, array_values(ClassField::TYPES_ASSOC))) {
 			$type = "array";
 			$name = $name . "List";
 		}
@@ -160,7 +168,7 @@ class ClassGenerator extends FileGenerator
 		$type = $field->getType();
 		$comment = $field->getComment() != null ? $field->getComment() : "";
 
-		if (in_array($type, array_values(ClassField::TYPES_ASSOC))) {
+		if (in_array($type, array_values(ClassField::TYPES_ASSOC)) || in_array($type, ['enum', 'set'])) {
 			if ($field->getPrimary()) {
 				$this->addContentLine("//PRIMARY_KEY", 1);
 			}
@@ -195,7 +203,7 @@ class ClassGenerator extends FileGenerator
 		$funcName = ClassBuilder::normalizeMethodName("get_" . $name);
 
 
-		if (!in_array($type, array_values(ClassField::TYPES_ASSOC))) {
+		if (!in_array($type, array_values(ClassField::TYPES_ASSOC)) && !in_array($type, ['enum', 'set'])) {
 			$type = "array";
 			$objectClass = ucfirst($name);
 			$fieldLink = $field->getLink()->getReferencedFieldName();
@@ -224,6 +232,8 @@ class ClassGenerator extends FileGenerator
 		} else {
 			if ($field->getColumnType() === "tinyint(1)") {
 				$type = "bool";
+			} elseif (in_array($type, ['enum', 'set'])) {
+				$type = "\\" . $field->getEnumGenerator()->getNamespace() . "\\" . $field->getEnumGenerator()->getClassName();
 			}
 
 			$this
@@ -252,7 +262,7 @@ class ClassGenerator extends FileGenerator
 					->addContentLine("return \$this->$nameLink;", 2)
 					->addContentLine("}", 1);
 			}
-		}
+		}/**/
 
 
 		return $this;
@@ -265,7 +275,9 @@ class ClassGenerator extends FileGenerator
 		$name = $field->getName();
 		$type = $field->getType();
 
-		if (!in_array($type, array_values(ClassField::TYPES_ASSOC))) {
+		if (in_array($type, ['enum', 'set'])) {
+			$type = "\\" . $field->getEnumGenerator()->getNamespace() . "\\" . $field->getEnumGenerator()->getClassName();
+		} elseif (!in_array($type, array_values(ClassField::TYPES_ASSOC))) {
 			$type = "array";
 			$name = $name . "List";
 		}
@@ -295,6 +307,8 @@ class ClassGenerator extends FileGenerator
 						$fieldsIdsStaticToNoStatic[] = "self::" . strtoupper($field->getName()) . " => \$this->" . $field->getName();
 						$fieldsIdsKeyValue[] = "[self::" . strtoupper($field->getName()) . ", \$this->" . $field->getName() . "]";
 					}
+				} elseif (in_array($field->getType(), ['enum', 'set'])) {
+					$fieldsStaticToNoStatic[] = "self::" . strtoupper($field->getName()) . " => " . "\$this->" . $field->getName() . "->value";
 				}
 			}
 		}
@@ -312,7 +326,7 @@ class ClassGenerator extends FileGenerator
 			->addContentLine("foreach (self::PRIMARY_KEYS as \$key => \$value) {", 2)
 			->addContentLine("\$where[] = [\$value, \$ids[\$key]];", 3)
 			->addContentLine("}", 2)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->from(self::TABLE)->where(\$where)->get(__CLASS__);", 2)
+			->addContentLine("return \\" . QuerySelect::class . "::create(self::DATABASE)->from(self::TABLE)->where(\$where)->get(__CLASS__);", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public static function findByIdOrFail(mixed ...\$ids): self", 1)
@@ -326,27 +340,27 @@ class ClassGenerator extends FileGenerator
 			->addBlankLine()
 			->addContentLine("public static function all(): array", 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->from(self::TABLE)->getAll(__CLASS__);", 2)
+			->addContentLine("return \\" . QuerySelect::class . "::create(self::DATABASE)->from(self::TABLE)->getAll(__CLASS__);", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public static function each(callable \$callable): array", 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->from(self::TABLE)->each(\$callable, __CLASS__);", 2)
+			->addContentLine("return \\" . QuerySelect::class . "::create(self::DATABASE)->from(self::TABLE)->each(\$callable, __CLASS__);", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
-			->addContentLine("public static function where(mixed ...\$parameters): \\".QuerySelect::class, 1)
+			->addContentLine("public static function where(mixed ...\$parameters): \\" . QuerySelect::class, 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->from(self::TABLE)->setClass(__CLASS__)->where(...\$parameters);", 2)
+			->addContentLine("return \\" . QuerySelect::class . "::create(self::DATABASE)->from(self::TABLE)->setClass(__CLASS__)->where(...\$parameters);", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
-			->addContentLine("public static function orWhere(mixed ...\$parameters): \\".QuerySelect::class, 1)
+			->addContentLine("public static function orWhere(mixed ...\$parameters): \\" . QuerySelect::class, 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->from(self::TABLE)->setClass(__CLASS__)->orWhere(...\$parameters);", 2)
+			->addContentLine("return \\" . QuerySelect::class . "::create(self::DATABASE)->from(self::TABLE)->setClass(__CLASS__)->orWhere(...\$parameters);", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
-			->addContentLine("public static function orderBy(array|string \$field, string \$direction = \"ASC\"): \\".QuerySelect::class, 1)
+			->addContentLine("public static function orderBy(array|string \$field, string \$direction = \"ASC\"): \\" . QuerySelect::class, 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->from(self::TABLE)->setClass(__CLASS__)->orderBy(\$field, \$direction);", 2)
+			->addContentLine("return \\" . QuerySelect::class . "::create(self::DATABASE)->from(self::TABLE)->setClass(__CLASS__)->orderBy(\$field, \$direction);", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public function save(): bool", 1)
@@ -360,22 +374,22 @@ class ClassGenerator extends FileGenerator
 			->addContentLine("\$idsIsNull = true;", 4)
 			->addContentLine("}", 3)
 			->addContentLine("}", 2)
-			->addContentLine("return \$idsIsNull ? \\".QueryInsert::class."::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->execute()->successExecuteRequest : \\".QueryUpdate::class."::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->where([" . implode(", ", $fieldsIdsKeyValue) . "])->limit(1)->execute()->successExecuteRequest;", 2)
+			->addContentLine("return \$idsIsNull ? \\" . QueryInsert::class . "::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->execute()->successExecuteRequest : \\" . QueryUpdate::class . "::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->where([" . implode(", ", $fieldsIdsKeyValue) . "])->limit(1)->execute()->successExecuteRequest;", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public function delete(): bool", 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QueryDelete::class."::create(self::DATABASE)->setTable(self::TABLE)->where([" . implode(", ", $fieldsIdsKeyValue) . "])->limit(1)->execute()->successExecuteRequest;", 2)
+			->addContentLine("return \\" . QueryDelete::class . "::create(self::DATABASE)->setTable(self::TABLE)->where([" . implode(", ", $fieldsIdsKeyValue) . "])->limit(1)->execute()->successExecuteRequest;", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public static function deleteAll(mixed ...\$parameters): int", 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QueryDelete::class."::create(self::DATABASE)->setTable(self::TABLE)->where(...\$parameters)->execute()->rowCount();", 2)
+			->addContentLine("return \\" . QueryDelete::class . "::create(self::DATABASE)->setTable(self::TABLE)->where(...\$parameters)->execute()->rowCount();", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public static function count(): int", 1)
 			->addContentLine("{", 1)
-			->addContentLine("return \\".QuerySelect::class."::create(self::DATABASE)->from(self::TABLE)->count();", 2)
+			->addContentLine("return \\" . QuerySelect::class . "::create(self::DATABASE)->from(self::TABLE)->count();", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public function __toString(): string", 1)

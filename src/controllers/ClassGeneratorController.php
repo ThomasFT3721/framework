@@ -34,7 +34,7 @@ class ClassGeneratorController extends BaseController
 
 	public function generate()
 	{
-		$databases = json_decode(EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES));
+		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
 		$classList = [];
 		if (array_key_exists('class', $_POST)) {
 			foreach ($databases as $databaseName) {
@@ -47,7 +47,7 @@ class ClassGeneratorController extends BaseController
 							$columns = DataBase::getData("information_schema", "SELECT * FROM `COLUMNS` WHERE `TABLE_SCHEMA` LIKE '$databaseName' AND `TABLE_NAME` LIKE '$tableName' ORDER BY `ordinal_position` ASC");
 							foreach ($columns as $column) {
 								$fields = [];
-								$field = new ClassField($databaseName, $column['COLUMN_NAME'], $column["DATA_TYPE"], $column["COLUMN_TYPE"], $column['COLUMN_NAME'], $column["IS_NULLABLE"] != "NO");
+								$field = new ClassField($databaseName, $tableName, $column['COLUMN_NAME'], $column["DATA_TYPE"], $column["COLUMN_TYPE"], $column['COLUMN_NAME'], $column["IS_NULLABLE"] != "NO", dataType: $column['DATA_TYPE']);
 								$field
 									->isPrimary($column["COLUMN_KEY"] == "PRI")
 									->addComment($column["COLUMN_TYPE"])
@@ -70,6 +70,7 @@ class ClassGeneratorController extends BaseController
 									foreach ($links as $link) {
 										$fields[] = (new ClassField(
 											$link["TABLE_SCHEMA"],
+											$link["TABLE_NAME"],
 											lcfirst(ClassBuilder::normalizeClassName($link["TABLE_NAME"])),
 											$link["TABLE_NAME"],
 											true,
@@ -89,6 +90,6 @@ class ClassGeneratorController extends BaseController
 				}
 			}
 		}
-		return count($classList) . " class generated";
+		echo count($classList) . " class generated";
 	}
 }
