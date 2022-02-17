@@ -35,6 +35,7 @@ class ViewHandler
 			ROOT_DIR . '/views',
 		];
 		self::createViewFoldersIfNotExist($view_folders);
+		self::loopForAddFieldToArray(ROOT_DIR . '/views', $view_folders);
 		$view_folders[] = __DIR__ . '/templates';
 		$twig = new Environment(
 			new FilesystemLoader($view_folders),
@@ -82,6 +83,17 @@ class ViewHandler
 		foreach ($folderList as $folder) {
 			if (!is_dir($folder)) {
 				mkdir($folder, recursive: true);
+			}
+		}
+	}
+
+	private static function loopForAddFieldToArray(string $path, array &$array)
+	{
+		$content = scandir($path);
+		foreach ($content as $item) {
+			if (is_dir($path . "/" . $item)) {
+				$array[] = $path . "/" . $item;
+				self::loopForAddFieldToArray($path . "/" . $item, $array);
 			}
 		}
 	}

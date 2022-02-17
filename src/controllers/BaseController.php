@@ -19,8 +19,15 @@ abstract class BaseController
 		echo "Controller: " . $reflectionClass->getShortName();
 	}
 
-	public function loadDefaultView(string $pageTitle, ) {
-		ViewHandler::render("", $pageTitle);
+	public function loadDefaultView(string $pageTitle, array $data = [], string $base_file = "base.twig")
+	{
+		$dbTrace = debug_backtrace()[1];
+		ViewHandler::render($dbTrace['class'] . "/" . $dbTrace['function'], $pageTitle, $data, $base_file);
+	}
+
+	public function loadView(string $filePath, string $pageTitle, array $data = [], string $base_file = "base.twig")
+	{
+		ViewHandler::render($filePath, $pageTitle, $data, $base_file);
 	}
 
 	public function __call($method, $args)
