@@ -3,17 +3,24 @@
 namespace Zaacom\controllers;
 
 use BadMethodCallException;
+use Zaacom\attributes\Controller;
+use Zaacom\views\ViewHandler;
 
 
 /**
  * @author Thomas FONTAINE--TUFFERY
  */
+#[Controller]
 abstract class BaseController
 {
 	public function index()
 	{
 		$reflectionClass = new \ReflectionClass(static::class);
 		echo "Controller: " . $reflectionClass->getShortName();
+	}
+
+	public function loadDefaultView(string $pageTitle, ) {
+		ViewHandler::render("", $pageTitle);
 	}
 
 	public function __call($method, $args)
