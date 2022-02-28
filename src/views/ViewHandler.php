@@ -91,7 +91,7 @@ class ViewHandler
 	{
 		$content = scandir($path);
 		foreach ($content as $item) {
-			if (is_dir($path . "/" . $item)) {
+			if (is_dir( "$path/" . $item) && in_array("$path/$item", $array)) {
 				$array[] = $path . "/" . $item;
 				self::loopForAddFieldToArray($path . "/" . $item, $array);
 			}

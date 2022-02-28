@@ -3,14 +3,12 @@
 namespace Zaacom\controllers;
 
 use BadMethodCallException;
-use Zaacom\attributes\Controller;
 use Zaacom\views\ViewHandler;
 
 
 /**
  * @author Thomas FONTAINE--TUFFERY
  */
-#[Controller]
 abstract class BaseController
 {
 	public function index()
@@ -22,7 +20,7 @@ abstract class BaseController
 	public function loadDefaultView(string $pageTitle, array $data = [], string $base_file = "base.twig")
 	{
 		$dbTrace = debug_backtrace()[1];
-		ViewHandler::render($dbTrace['class'] . "/" . $dbTrace['function'], $pageTitle, $data, $base_file);
+		ViewHandler::render((new \ReflectionClass(static::class))->getShortName() . "/" . $dbTrace['function'] . ".twig", $pageTitle, $data, $base_file);
 	}
 
 	public function loadView(string $filePath, string $pageTitle, array $data = [], string $base_file = "base.twig")

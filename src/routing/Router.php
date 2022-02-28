@@ -4,6 +4,7 @@ namespace Zaacom\routing;
 
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
+use Zaacom\attributes\Controller;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
 use Zaacom\exception\IndexOutOfBounds;
@@ -34,11 +35,90 @@ abstract class Router
 			define("ROOT_DIR", __DIR__ . "/../../../../..");
 		}
 		require_once __DIR__ . '/admin.php';
-		if (!is_dir(ROOT_DIR . "/routes")) {
-			mkdir(ROOT_DIR . "/routes");
-		}
-		foreach (glob(ROOT_DIR . "/routes/*.php", GLOB_BRACE) as $filePath) {
-			require_once ROOT_DIR . str_replace(ROOT_DIR, "", $filePath);
+		if (EnvironmentVariable::get(EnvironmentVariablesIdentifiers::MODE_DEBUG)) {
+			foreach (scandir(ROOT_DIR . "/controllers") as $item) {
+				$pathInfo = pathinfo(ROOT_DIR . "/controllers/$item");
+				if ($pathInfo['extension'] == "php") {
+					require_once ROOT_DIR . "/controllers/$item";
+				}
+			}
+
+			$classArray = [];
+			foreach (get_declared_classes() as $class) {
+				$reflectionClass = new \ReflectionClass($class);
+				$c = [
+					'isController' => false,
+					'className' => $reflectionClass->getName(),
+					'namespace' => $reflectionClass->getNamespaceName(),
+					'routes' => [],
+					'methods' => [],
+				];
+				foreach ($reflectionClass->getAttributes() as $attribute) {
+					if ($attribute->getName() == Controller::class) {
+						$c['isController'] = true;
+					}
+					if ($attribute->getName() == \Zaacom\attributes\Route::class) {
+						$c['routes'][$attribute->newInstance()->getMethod()->name][] = [
+							'path' => $attribute->newInstance()->getPath(),
+							'name' => $attribute->newInstance()->getName() ?? $attribute->newInstance()->getMethod()->name . "." . $reflectionClass->getShortName(),
+						];
+					}
+				}
+				foreach ($reflectionClass->getMethods() as $key => $method) {
+					if ($method->getDeclaringClass()->getShortName() == $reflectionClass->getShortName()) {
+						if (count($method->getAttributes()) > 0) {
+							$c['methods'][$method->getName()] = [
+								'defaultViewExist' => file_exists(ROOT_DIR . "/views/" . $reflectionClass->getShortName() . "/" . $method->getShortName() . ".twig"),
+								'attributes' => [],
+							];
+							foreach ($method->getAttributes() as $attr) {
+								if ($attr->getName() == \Zaacom\attributes\Route::class) {
+									$path = $attr->newInstance()->getPath() ?? $method->getName();
+									$methodName = $attr->newInstance()->getMethod()->name;
+									if (array_key_exists($methodName, $c['routes'])) {
+										foreach ($c['routes'][$methodName] as $item) {
+											$c['methods'][$method->getName()]['attributes'][$attr->getName()][$methodName][] = [
+												'name' => $attr->newInstance()->getName(),
+												'method' => $attr->newInstance()->getMethod(),
+												'path' => $path,
+												'fullPath' => $item['path'] . "/" . $path,
+											];
+										}
+									} else {
+										$c['methods'][$method->getName()]['attributes'][$attr->getName()][$methodName][] = [
+											'name' => $attr->newInstance()->getName(),
+											'method' => $attr->newInstance()->getMethod(),
+											'path' => $path,
+											'fullPath' => $path,
+										];
+									}
+								}
+							}
+						}
+					}
+				}
+				$classArray[] = $c;
+			}
+			$ca = [];
+			foreach ($classArray as $c) {
+				if ($c['isController']) {
+					$ca[] = $c;
+					foreach ($c['methods'] as $method => $data) {
+						foreach ($data['attributes'] as $attrName => $attribute) {
+							if ($attrName == \Zaacom\attributes\Route::class) {
+								foreach ($attribute as $httpMethodName => $arr) {
+									foreach ($arr as $item) {
+										$r = Route::{strtolower($httpMethodName)}($item['fullPath'], [$c['className'], $method]);
+										if (!empty($item['name'])) {
+											$r->name($item['name']);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
