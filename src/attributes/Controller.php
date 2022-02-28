@@ -2,7 +2,7 @@
 
 namespace Zaacom\attributes;
 
-#[\Attribute]
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class Controller
 {
 
