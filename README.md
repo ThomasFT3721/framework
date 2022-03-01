@@ -2,70 +2,127 @@
 
 # Framework zaacom
 
-php version : **8.0**
+php version : **8.1**
 
 * Menu
     * Installation [<i class="fas fa-hashtag"></i>](#installation)
-    * Route [<i class="fas fa-hashtag"></i>](#route)
-      * Add route [<i class="fas fa-hashtag"></i>](#addRoute)
-      * Admin route [<i class="fas fa-hashtag"></i>](#adminRoute)
+    * Attributes [<i class="fas fa-hashtag"></i>](#attributes)
+      * Controller [<i class="fas fa-hashtag"></i>](#attrController)
+      * Route [<i class="fas fa-hashtag"></i>](#attrRoute)
 
 ## <div id="installation">Installation</div>
 
-1. Add this into `/composer.json` file
-```json
-"autoload": {
-  "psr-4": {
-    "Zaacom\\": "vendor/zaacom/framework/src"
-  }
-},
-"repositories": [
-  {
-    "type": "vcs",
-    "url": "https://github.com/ThomasFT3721/framework"
-  }
-],
-"require": {
-  "zaacom/framework": "dev-master"
-}
+1. Run this command
+```cmd
+Zaacom create project
 ```
-2. Run command `composer install`.
-3. Go to the folder `/vendor/zaacom/framework` and copy the `.htaccess`, `index.php` files to `/`.
-4. Run command `composer dump`.
-5. Start the server and go to `/Admin/Folders/generate`.
-5. After go to `/Admin/Objects/index`, select the objects to be generated.
-6. Add this into `/composer.json` file
-```json
-"autoload": {
-  ...,
-  "classmap": [
-    "models",
-    "controllers",
-    "tools"
-  ]
-}
-```
-7. Run command `composer dump`.
-8. Now you are ready, **have fun!**
+2. Complete the processes and dow you are ready, **have fun!**
 
-## <div id="route">Route</div>
+## <div id="attributes">Attributes</div>
 
 
-### <div id="addRoute">Add route</div>
-
-To add a route you must create a PHP file in the folder `/routes/`.
-
-In this file add the following code: 
+### <div id="attrController">Controller</div>
 
 ```php
-<?php
+use Zaacom\attributes\Controller;
 
-Zaacom\routing\Route::get("/", [ExampleController::class, "methodName"], ["name" => "rooute_name"]);
-Zaacom\routing\Route::post("/", [ExampleController::class, "methodName"], ["name" => "rooute_name"]);
-Zaacom\routing\Route::delete("/", [ExampleController::class, "methodName"], ["name" => "rooute_name"]);
-Zaacom\routing\Route::patch("/", [ExampleController::class, "methodName"], ["name" => "rooute_name"]);
-Zaacom\routing\Route::put("/", [ExampleController::class, "methodName"], ["name" => "rooute_name"]);
+
+#[Controller]
+class MainController extends \Zaacom\controllers\BaseController {
+    ...
+}
 ```
+
+### <div id="attrRoute">Route</div>
+
+```php
+use Zaacom\attributes\Controller;
+use Zaacom\attributes\Route;
+use Zaacom\routing\RouteMethodEnum;
+
+#[Controller]
+class MainController extends \Zaacom\controllers\BaseController {
+
+    #[Route]
+    public function index() {
+        //Name: GET.MainController.index
+        //path: MainController/index
+        //method: GET
+    }
+    
+    #[Route(method: RouteMethodEnum::POST)]
+    public function index2() {
+        //Name: POST.MainController.index2
+        //path: MainController/index2
+        //method: POST
+    }
+    
+    #[Route(path: 'home')]
+    public function index3() {
+        //Name: GET.MainController.index3
+        //path: home
+        //method: GET
+    }
+    
+    #[Route(name: 'home')]
+    public function index4() {
+        //Name: home
+        //path: MainController/index4
+        //method: GET
+    }
+}
+```
+
+```php
+use Zaacom\attributes\Controller;
+use Zaacom\attributes\Route;
+use Zaacom\routing\RouteMethodEnum;
+
+#[Controller]
+#[Route(path: 'main')]
+class MainController extends \Zaacom\controllers\BaseController {
+
+    #[Route]
+    public function index() {
+        //Name: GET.MainController.index
+        //path: path/index
+        //method: GET
+    }
+    
+    #[Route(path: 'home')]
+    public function index2() {
+        //Name: GET.MainController.index2
+        //path: path/home
+        //method: GET
+    }
+}
+```
+
+```php
+use Zaacom\attributes\Controller;
+use Zaacom\attributes\Route;
+use Zaacom\routing\RouteMethodEnum;
+
+#[Controller]
+#[Route(name: 'main')]
+class MainController extends \Zaacom\controllers\BaseController {
+
+    #[Route]
+    public function index() {
+        //Name: main.index
+        //path: path/index
+        //method: GET
+    }
+    
+    #[Route(name: 'home')]
+    public function index2() {
+        //Name: main.home
+        //path: MainController/index2
+        //method: GET
+    }
+}
+```
+
 
 ### <div id="adminRoute">Admin route</div>
 

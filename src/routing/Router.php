@@ -59,7 +59,7 @@ abstract class Router
 					}
 					if ($attribute->getName() == \Zaacom\attributes\Route::class) {
 						$c['routes'][$attribute->newInstance()->getMethod()->name][] = [
-							'path' => $attribute->newInstance()->getPath(),
+							'path' => trim($attribute->newInstance()->getPath(), "/"),
 							'name' => $attribute->newInstance()->getName() ?? $attribute->newInstance()->getMethod()->name . "." . $reflectionClass->getShortName(),
 						];
 					}
@@ -73,12 +73,12 @@ abstract class Router
 							];
 							foreach ($method->getAttributes() as $attr) {
 								if ($attr->getName() == \Zaacom\attributes\Route::class) {
-									$path = $attr->newInstance()->getPath() ?? $method->getName();
+									$path = trim($attr->newInstance()->getPath() ?? $method->getName(), "/");
 									$methodName = $attr->newInstance()->getMethod()->name;
 									if (array_key_exists($methodName, $c['routes'])) {
 										foreach ($c['routes'][$methodName] as $item) {
 											$c['methods'][$method->getName()]['attributes'][$attr->getName()][$methodName][] = [
-												'name' => $attr->newInstance()->getName(),
+												'name' => (!empty($item['name']) ? $item['name'] . "." : "") . $attr->newInstance()->getName(),
 												'method' => $attr->newInstance()->getMethod(),
 												'path' => $path,
 												'fullPath' => $item['path'] . "/" . $path,
