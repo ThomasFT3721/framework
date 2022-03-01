@@ -119,6 +119,10 @@ abstract class Router
 					}
 				}
 			}
+			if (!is_dir(ROOT_DIR.'/cache')) {
+				mkdir(ROOT_DIR.'/cache');
+			}
+			file_put_contents(ROOT_DIR.'/cache/routes.json', json_encode(self::getRoutes()));
 		}
 	}
 
