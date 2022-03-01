@@ -13,9 +13,10 @@ class Route
 
 	private RouteMethodEnum $method;
 	private string $path;
-	private array|string $action;
+	public array|string $action;
 	public ?string $name = null;
 	public ?array $middlewares = null;
+	public string $methodString;
 
 
 	public function __construct(RouteMethodEnum $method, string $path, array|string $action)
@@ -23,6 +24,7 @@ class Route
 		$this->method = $method;
 		$this->path = trim($path, "\t\n\r\0\x0B ");
 		$this->action = $action;
+		$this->methodString = $method->name;
 	}
 
 

@@ -35,7 +35,7 @@ abstract class Router
 			define("ROOT_DIR", __DIR__ . "/../../../../..");
 		}
 		require_once __DIR__ . '/admin.php';
-		if (EnvironmentVariable::get(EnvironmentVariablesIdentifiers::MODE_DEBUG)) {
+		if (EnvironmentVariable::get(EnvironmentVariablesIdentifiers::MODE_DEBUG) || !file_exists(ROOT_DIR . '/cache/routes.json')) {
 			foreach (scandir(ROOT_DIR . "/controllers") as $item) {
 				$pathInfo = pathinfo(ROOT_DIR . "/controllers/$item");
 				if ($pathInfo['extension'] == "php") {
@@ -81,7 +81,7 @@ abstract class Router
 												'name' => (!empty($item['name']) ? $item['name'] . "." : "") . $attr->newInstance()->getName(),
 												'method' => $attr->newInstance()->getMethod(),
 												'path' => $path,
-												'fullPath' => $item['path'] . "/" . $path,
+												'fullPath' => "/" .$item['path'] . "/" . $path,
 											];
 										}
 									} else {
@@ -89,7 +89,7 @@ abstract class Router
 											'name' => $attr->newInstance()->getName(),
 											'method' => $attr->newInstance()->getMethod(),
 											'path' => $path,
-											'fullPath' => $path,
+											'fullPath' => "/" .$path,
 										];
 									}
 								}
@@ -119,10 +119,23 @@ abstract class Router
 					}
 				}
 			}
-			if (!is_dir(ROOT_DIR.'/cache')) {
-				mkdir(ROOT_DIR.'/cache');
+			if (!is_dir(ROOT_DIR . '/cache')) {
+				mkdir(ROOT_DIR . '/cache');
 			}
-			file_put_contents(ROOT_DIR.'/cache/routes.json', json_encode(self::getRoutes()));
+			file_put_contents(ROOT_DIR . '/cache/routes.json', json_encode(self::getRoutes()));
+		} else {
+			$json = json_decode(file_get_contents(ROOT_DIR . '/cache/routes.json'), true);
+			foreach ($json as $path => $item) {
+				$r = Route::{strtolower($item['methodString'])}($path, $item['action']);
+				if (!empty($item['name'])) {
+					$r->name($item['name']);
+				}
+				if (!empty($item['middlewares'])) {
+					foreach ($item['middlewares'] as $middleware) {
+						$r->middleware($middleware[0], $middleware[1]);
+					}
+				}
+			}
 		}
 	}
 
