@@ -37,7 +37,6 @@ abstract class Router
 		if (!defined("ROOT_DIR")) {
 			define("ROOT_DIR", __DIR__ . "/../../../../..");
 		}
-		require_once __DIR__ . '/admin.php';
 		if (EnvironmentVariable::get(EnvironmentVariablesIdentifiers::MODE_DEBUG) || !file_exists(ROOT_DIR . '/cache/routes.json')) {
 			foreach (scandir(ROOT_DIR . "/controllers") as $item) {
 				$pathInfo = pathinfo(ROOT_DIR . "/controllers/$item");
@@ -161,7 +160,6 @@ abstract class Router
 			if (!is_dir(ROOT_DIR . '/cache')) {
 				mkdir(ROOT_DIR . '/cache');
 			}
-			print_readable(self::getRoutes());
 			file_put_contents(ROOT_DIR . '/cache/routes.json', json_encode(self::getRoutes()));
 
 			echo json_last_error() . "/" . json_last_error_msg();
@@ -228,7 +226,6 @@ abstract class Router
 				$c = (new \ReflectionClass($class));
 				if ($c->getParentClass() !== false) {
 					if ($c->getParentClass()->getName() === AuthenticationController::class) {
-						print_readable((new $class())->redirectTo(self::$currentRoute));
 						return self::$currentRoute;
 					}
 				}

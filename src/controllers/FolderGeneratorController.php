@@ -4,12 +4,18 @@ namespace Zaacom\controllers;
 
 
 
+use Zaacom\attributes\Controller;
+use Zaacom\attributes\Route;
+
 /**
  * @author Thomas FONTAINE--TUFFERY
  */
+#[Controller]
+#[Route(path: 'zf-admin/Folders')]
 class FolderGeneratorController extends BaseController
 {
 
+	#[Route(path: 'generate')]
 	public function generate()
 	{
 		$directories = [

@@ -3,6 +3,8 @@
 namespace Zaacom\controllers;
 
 
+use Zaacom\attributes\Controller;
+use Zaacom\attributes\Route;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
 use Zaacom\models\ClassBuilder;
@@ -15,9 +17,12 @@ use Zaacom\views\ViewHandler;
 /**
  * @author Thomas FONTAINE--TUFFERY
  */
+#[Controller]
+#[Route(path: '/zf-admin/Objects')]
 class ClassGeneratorController extends BaseController
 {
 
+	#[Route(path: '')]
 	public function index()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
@@ -32,6 +37,7 @@ class ClassGeneratorController extends BaseController
 		return ViewHandler::render("/models/index.twig", "Generate class", ["classList" => $classList], "framework_base.twig");
 	}
 
+	#[Route(path: 'generate')]
 	public function generate()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
