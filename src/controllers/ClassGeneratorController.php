@@ -37,7 +37,7 @@ class ClassGeneratorController extends BaseController
 		return ViewHandler::render("/models/index.twig", "Generate class", ["classList" => $classList], "framework_base.twig");
 	}
 
-	#[Route]
+	#[Route(name: 'object_generator_generate')]
 	public function generate()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
