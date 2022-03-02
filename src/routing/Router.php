@@ -45,7 +45,10 @@ abstract class Router
 				}
 			}
 			foreach (scandir(__DIR__ . "/../controllers") as $item) {
-				require_once __DIR__ . "/../controllers/$item";
+				$pathInfo = pathinfo(__DIR__ . "/../controllers/$item");
+				if ($pathInfo['extension'] == "php") {
+					require_once __DIR__ . "/../controllers/$item";
+				}
 			}
 
 			$classArray = [];

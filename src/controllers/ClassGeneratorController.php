@@ -22,7 +22,7 @@ use Zaacom\views\ViewHandler;
 class ClassGeneratorController extends BaseController
 {
 
-	#[Route(path: '')]
+	#[Route]
 	public function index()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
@@ -37,7 +37,7 @@ class ClassGeneratorController extends BaseController
 		return ViewHandler::render("/models/index.twig", "Generate class", ["classList" => $classList], "framework_base.twig");
 	}
 
-	#[Route(path: 'generate')]
+	#[Route]
 	public function generate()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
