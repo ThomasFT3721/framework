@@ -18,11 +18,10 @@ use Zaacom\views\ViewHandler;
  * @author Thomas FONTAINE--TUFFERY
  */
 #[Controller]
-#[Route(path: '/zf-admin/Objects')]
 class ClassGeneratorController extends BaseController
 {
 
-	#[Route]
+	#[Route(path: '/zf-admin/Objects')]
 	public function index()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
@@ -37,7 +36,7 @@ class ClassGeneratorController extends BaseController
 		return ViewHandler::render("/models/index.twig", "Generate class", ["classList" => $classList], "framework_base.twig");
 	}
 
-	#[Route(name: 'object_generator_generate')]
+	#[Route(path: '/zf-admin/Objects/generate', name: 'object_generator_generate')]
 	public function generate()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);

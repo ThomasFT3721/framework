@@ -11,11 +11,10 @@ use Zaacom\attributes\Route;
  * @author Thomas FONTAINE--TUFFERY
  */
 #[Controller]
-#[Route(path: 'zf-admin/Folders')]
 class FolderGeneratorController extends BaseController
 {
 
-	#[Route(path: 'generate')]
+	#[Route(path: 'zf-admin/Folders/generate')]
 	public function generate()
 	{
 		$directories = [
