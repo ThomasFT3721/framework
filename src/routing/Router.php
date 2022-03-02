@@ -5,6 +5,7 @@ namespace Zaacom\routing;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use Zaacom\attributes\Controller;
+use Zaacom\authentication\AuthenticationController;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
 use Zaacom\exception\IndexOutOfBounds;
@@ -12,6 +13,7 @@ use Zaacom\exception\InvalidNumberArgumentsException;
 use Zaacom\exception\RouteMethodNotFoundException;
 use Zaacom\exception\RouteNotFoundException;
 use Zaacom\exception\UnknownRouteException;
+use Zaacom\session\USession;
 
 
 /**
@@ -21,10 +23,11 @@ abstract class Router
 {
 
 	private static array $routes = [];
+	private static ?Route $currentRoute = null;
 
-	public static function add(RouteMethodEnum $method, string $path, array|string $action): Route
+	public static function add(RouteMethodEnum $method, string $path, array|string $action, array $allowed): Route
 	{
-		$route = new Route($method, $path, $action);
+		$route = new Route($method, $path, $action, $allowed);
 		self::$routes[$path] = $route;
 		return $route;
 	}
@@ -51,6 +54,7 @@ abstract class Router
 					'className' => $reflectionClass->getName(),
 					'namespace' => $reflectionClass->getNamespaceName(),
 					'routes' => [],
+					'allowed' => [],
 					'methods' => [],
 				];
 				foreach ($reflectionClass->getAttributes() as $attribute) {
@@ -63,6 +67,11 @@ abstract class Router
 							'name' => $attribute->newInstance()->getName() ?? $attribute->newInstance()->getMethod()->name . "." . $reflectionClass->getShortName(),
 						];
 					}
+					if ($attribute->getName() == \Zaacom\attributes\Allow::class) {
+						foreach ($attribute->newInstance()->getRoles() as $role) {
+							$c['allowed'][] = new AllowedPermission($role, $attribute->newInstance()->getPermissions());
+						}
+					}
 				}
 				foreach ($reflectionClass->getMethods() as $key => $method) {
 					if ($method->getDeclaringClass()->getShortName() == $reflectionClass->getShortName()) {
@@ -70,28 +79,37 @@ abstract class Router
 							$c['methods'][$method->getName()] = [
 								'defaultViewExist' => file_exists(ROOT_DIR . "/views/" . $reflectionClass->getShortName() . "/" . $method->getShortName() . ".twig"),
 								'attributes' => [],
+								'allowed' => [],
+								'routes' => [],
 							];
 							foreach ($method->getAttributes() as $attr) {
-								if ($attr->getName() == \Zaacom\attributes\Route::class) {
-									$path = trim($attr->newInstance()->getPath() ?? $method->getName(), "/");
-									$methodName = $attr->newInstance()->getMethod()->name;
-									if (array_key_exists($methodName, $c['routes'])) {
-										foreach ($c['routes'][$methodName] as $item) {
-											$c['methods'][$method->getName()]['attributes'][$attr->getName()][$methodName][] = [
-												'name' => (!empty($item['name']) ? $item['name'] . "." : "") . $attr->newInstance()->getName(),
+								switch ($attr->getName()) {
+									case \Zaacom\attributes\Route::class:
+										$path = trim($attr->newInstance()->getPath() ?? $method->getName(), "/");
+										$methodName = $attr->newInstance()->getMethod()->name;
+										if (array_key_exists($methodName, $c['routes'])) {
+											foreach ($c['routes'][$methodName] as $item) {
+												$c['methods'][$method->getName()]['routes'][$methodName][] = [
+													'name' => (!empty($item['name']) ? $item['name'] . "." : "") . $attr->newInstance()->getName(),
+													'method' => $attr->newInstance()->getMethod(),
+													'path' => $path,
+													'fullPath' => "/" . $item['path'] . "/" . $path,
+												];
+											}
+										} else {
+											$c['methods'][$method->getName()]['routes'][$methodName][] = [
+												'name' => $attr->newInstance()->getName(),
 												'method' => $attr->newInstance()->getMethod(),
 												'path' => $path,
-												'fullPath' => "/" .$item['path'] . "/" . $path,
+												'fullPath' => "/" . $path,
 											];
 										}
-									} else {
-										$c['methods'][$method->getName()]['attributes'][$attr->getName()][$methodName][] = [
-											'name' => $attr->newInstance()->getName(),
-											'method' => $attr->newInstance()->getMethod(),
-											'path' => $path,
-											'fullPath' => "/" .$path,
-										];
-									}
+										break;
+									case \Zaacom\attributes\Allow::class:
+										foreach ($attr->newInstance()->getRoles() as $role) {
+											$c['methods'][$method->getName()]['allowed'][] = new AllowedPermission($role, $attr->newInstance()->getPermissions());
+										}
+										break;
 								}
 							}
 						}
@@ -103,16 +121,37 @@ abstract class Router
 			foreach ($classArray as $c) {
 				if ($c['isController']) {
 					$ca[] = $c;
-					foreach ($c['methods'] as $method => $data) {
-						foreach ($data['attributes'] as $attrName => $attribute) {
-							if ($attrName == \Zaacom\attributes\Route::class) {
-								foreach ($attribute as $httpMethodName => $arr) {
-									foreach ($arr as $item) {
-										$r = Route::{strtolower($httpMethodName)}($item['fullPath'], [$c['className'], $method]);
-										if (!empty($item['name'])) {
-											$r->name($item['name']);
-										}
-									}
+					$allowsClass = [];
+					foreach ($c['allowed'] as $allow) {
+						if (array_key_exists($allow->getRole(), $allowsClass)) {
+							$permissions = array_merge($allowsClass[$allow->getRole()], $allow->getPermissions());
+							unset($allowsClass[$allow->getRole()]);
+							$allowsClass[$allow->getRole()] = $permissions;
+						} else {
+							$allowsClass[$allow->getRole()] = $allow->getPermissions();
+						}
+					}
+					foreach ($c['methods'] as $method => $methodData) {
+						$allowsRoute = $allowsClass;
+						foreach ($methodData['allowed'] as $allow) {
+							if (array_key_exists($allow->getRole(), $allowsRoute)) {
+								$permissions = $allowsRoute[$allow->getRole()];
+								if (count($allow->getPermissions()) > 0) {
+									$permissions = $allow->getPermissions();
+								}
+								unset($allowsRoute[$allow->getRole()]);
+								if (!empty($permissions)) {
+									$allowsRoute[$allow->getRole()] = $permissions;
+								}
+							} else {
+								$allowsRoute[$allow->getRole()] = $allow->getPermissions();
+							}
+						}
+						foreach ($methodData['routes'] as $httpMethodName => $routes) {
+							foreach ($routes as $route) {
+								$r = Route::{strtolower($httpMethodName)}($route['fullPath'], [$c['className'], $method], $allowsRoute);
+								if (!empty($route['name'])) {
+									$r->name($route['name']);
 								}
 							}
 						}
@@ -122,7 +161,10 @@ abstract class Router
 			if (!is_dir(ROOT_DIR . '/cache')) {
 				mkdir(ROOT_DIR . '/cache');
 			}
+			print_readable(self::getRoutes());
 			file_put_contents(ROOT_DIR . '/cache/routes.json', json_encode(self::getRoutes()));
+
+			echo json_last_error() . "/" . json_last_error_msg();
 		} else {
 			$json = json_decode(file_get_contents(ROOT_DIR . '/cache/routes.json'), true);
 			foreach ($json as $path => $item) {
@@ -146,26 +188,54 @@ abstract class Router
 	public static function run(string $url): Route
 	{
 		self::includeRoutes();
-		$route = null;
 		$params = [];
 		foreach (self::$routes as $r) {
 			if (($matched = $r->matchWith($url)) !== false) {
-				$route = $r;
+				self::$currentRoute = $r;
 				$params = $matched;
 				break;
 			}
 		}
 
-		if ($route === null) {
+		if (self::$currentRoute === null) {
 			throw new UnknownRouteException($url);
 		}
-		if (is_array($route->getAction()) && count($route->getAction()) != 2) {
-			throw new InvalidNumberArgumentsException($route->getAction(), 2);
+		USession::set('framework_permissions', []);
+		$canAccess = false;
+		if (!empty(self::$currentRoute->getAllowed())) {
+			if (AuthenticationController::user() !== null) {
+				$canAccess = true;
+				if (array_key_exists(AuthenticationController::role(), self::$currentRoute->getAllowed())) {
+					$canAccess = true;
+					USession::set('framework_permissions', self::$currentRoute->getAllowed()[AuthenticationController::role()]);
+				} else {
+					$canAccess = false;
+				}
+			} else {
+				$canAccess = false;
+			}
+		} else {
+			$canAccess = true;
 		}
-		$route->runMiddlewares();
-		call_user_func_array([new ($route->getAction()[0]), $route->getAction()[1]], $params);
+		if ($canAccess) {
+			if (is_array(self::$currentRoute->getAction()) && count(self::$currentRoute->getAction()) != 2) {
+				throw new InvalidNumberArgumentsException(self::$currentRoute->getAction(), 2);
+			}
+			self::$currentRoute->runMiddlewares();
+			call_user_func_array([new (self::$currentRoute->getAction()[0]), self::$currentRoute->getAction()[1]], $params);
+		} else {
+			foreach (get_declared_classes() as $class) {
+				$c = (new \ReflectionClass($class));
+				if ($c->getParentClass() !== false) {
+					if ($c->getParentClass()->getName() === AuthenticationController::class) {
+						print_readable((new $class())->redirectTo(self::$currentRoute));
+						return self::$currentRoute;
+					}
+				}
+			}
+		}
 
-		return $route;
+		return self::$currentRoute;
 	}
 
 	public static function clearRoutes()
@@ -227,6 +297,15 @@ abstract class Router
 	#[NoReturn] public static function redirectTo(string $name, array $args = [], RouteMethodEnum $method = RouteMethodEnum::GET): void
 	{
 		header("Location: " . self::getRouteUrlByRouteName($name, $args, $method));
+		exit();
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	#[NoReturn] public static function redirectToUrl(string $url): void
+	{
+		header("Location: " . $url);
 		exit();
 	}
 

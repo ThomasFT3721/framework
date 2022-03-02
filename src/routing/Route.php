@@ -16,46 +16,48 @@ class Route
 	public array|string $action;
 	public ?string $name = null;
 	public ?array $middlewares = null;
+	public array $allowed;
 	public string $methodString;
 
 
-	public function __construct(RouteMethodEnum $method, string $path, array|string $action)
+	public function __construct(RouteMethodEnum $method, string $path, array|string $action, array $allowed)
 	{
 		$this->method = $method;
 		$this->path = trim($path, "\t\n\r\0\x0B ");
 		$this->action = $action;
 		$this->methodString = $method->name;
+		$this->allowed = $allowed;
 	}
 
 
-	public static function post(string $path, array|string $action): Route
+	public static function post(string $path, array|string $action, array $allowed): Route
 	{
-		return Route::add(RouteMethodEnum::POST, $path, $action);
+		return Route::add(RouteMethodEnum::POST, $path, $action, $allowed);
 	}
 
-	public static function get(string $path, array|string $action): Route
+	public static function get(string $path, array|string $action, array $allowed): Route
 	{
-		return Route::add(RouteMethodEnum::GET, $path, $action);
+		return Route::add(RouteMethodEnum::GET, $path, $action, $allowed);
 	}
 
-	public static function put(string $path, array|string $action): Route
+	public static function put(string $path, array|string $action, array $allowed): Route
 	{
-		return Route::add(RouteMethodEnum::PUT, $path, $action);
+		return Route::add(RouteMethodEnum::PUT, $path, $action, $allowed);
 	}
 
-	public static function delete(string $path, array|string $action): Route
+	public static function delete(string $path, array|string $action, array $allowed): Route
 	{
-		return Route::add(RouteMethodEnum::DELETE, $path, $action);
+		return Route::add(RouteMethodEnum::DELETE, $path, $action, $allowed);
 	}
 
-	public static function patch(string $path, array|string $action): Route
+	public static function patch(string $path, array|string $action, array $allowed): Route
 	{
-		return Route::add(RouteMethodEnum::PATCH, $path, $action);
+		return Route::add(RouteMethodEnum::PATCH, $path, $action, $allowed);
 	}
 
-	private static function add(RouteMethodEnum $method, string $path, array|string $action): Route
+	private static function add(RouteMethodEnum $method, string $path, array|string $action, array $allowed): Route
 	{
-		return Router::add($method, $path, $action);
+		return Router::add($method, $path, $action, $allowed);
 	}
 
 	/**
@@ -111,6 +113,14 @@ class Route
 			}
 		}
 		return $parameters;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAllowed(): array
+	{
+		return $this->allowed;
 	}
 
 	/**
