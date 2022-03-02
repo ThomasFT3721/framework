@@ -20,7 +20,6 @@ class FolderGeneratorController extends BaseController
 	{
 		$directories = [
 			"/views",
-			"/routes",
 			"/assets",
 			"/assets/css",
 			"/assets/scss",

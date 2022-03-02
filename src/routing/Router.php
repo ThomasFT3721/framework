@@ -44,6 +44,9 @@ abstract class Router
 					require_once ROOT_DIR . "/controllers/$item";
 				}
 			}
+			foreach (scandir(__DIR__ . "/../controllers") as $item) {
+				require_once __DIR__ . "/../controllers/$item";
+			}
 
 			$classArray = [];
 			foreach (get_declared_classes() as $class) {
@@ -161,8 +164,6 @@ abstract class Router
 				mkdir(ROOT_DIR . '/cache');
 			}
 			file_put_contents(ROOT_DIR . '/cache/routes.json', json_encode(self::getRoutes()));
-
-			echo json_last_error() . "/" . json_last_error_msg();
 		} else {
 			$json = json_decode(file_get_contents(ROOT_DIR . '/cache/routes.json'), true);
 			foreach ($json as $path => $item) {
