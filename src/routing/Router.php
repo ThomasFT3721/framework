@@ -5,6 +5,7 @@ namespace Zaacom\routing;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use Zaacom\attributes\Controller;
+use Zaacom\attributes\enum\AllowPermissionEnum;
 use Zaacom\authentication\AuthenticationController;
 use Zaacom\environment\EnvironmentVariable;
 use Zaacom\environment\EnvironmentVariablesIdentifiers;
@@ -170,7 +171,14 @@ abstract class Router
 		} else {
 			$json = json_decode(file_get_contents(ROOT_DIR . '/cache/routes.json'), true);
 			foreach ($json as $path => $item) {
-				$r = Route::{strtolower($item['methodString'])}($path, $item['action']);
+				$allows = [];
+				foreach ($item['allowed'] as $role => $items) {
+					$allows[$role] = [];
+					foreach ($items as $i) {
+						$allows[$role][] = AllowPermissionEnum::from($i);
+					}
+				}
+				$r = Route::{strtolower($item['methodString'])}($path, $item['action'], $allows);
 				if (!empty($item['name'])) {
 					$r->name($item['name']);
 				}
