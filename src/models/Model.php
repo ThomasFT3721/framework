@@ -8,22 +8,24 @@ namespace Zaacom\models;
  */
 interface Model
 {
-    /**
-     * @param mixed ...$ids test
-     */
-    public static function findById(mixed ...$ids): self|false;
+	/**
+	 * @param mixed ...$ids test
+	 */
+	public static function findById(mixed ...$ids): self|false;
 
-    public static function findByIdOrFail(mixed ...$ids): self;
+	public static function findByIdOrFail(mixed ...$ids): self;
 
-    public static function all(): array;
+	public static function __create(array $params): self;
 
-    public static function where(mixed ...$parameters): QuerySelect;
+	public static function all(): array;
 
-    public static function each(callable $callable): array;
+	public static function where(mixed ...$parameters): QuerySelect;
 
-    public function save(): bool;
+	public static function each(callable $callable): array;
 
-    public function delete(): bool;
+	public function save(): bool;
+
+	public function delete(): bool;
 
 	public static function deleteAll(mixed ...$parameters): int;
 

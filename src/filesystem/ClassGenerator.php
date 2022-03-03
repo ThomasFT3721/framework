@@ -10,10 +10,8 @@ use Zaacom\helper\DateTime;
 use Zaacom\models\BaseModel;
 use Zaacom\models\ClassBuilder;
 use Zaacom\models\ClassField;
-use Zaacom\models\Model;
 use Zaacom\models\QueryDelete;
 use Zaacom\models\QueryInsert;
-use Zaacom\models\QuerySelect;
 use Zaacom\models\QueryUpdate;
 
 
@@ -50,7 +48,8 @@ class ClassGenerator extends FileGenerator
 	{
 		$this->addBlankLine();
 
-		$assigned = $nullElements = $specialTypes = $enumTypes = [];
+		$assignedToType = $assigned = $nullElements = $specialTypes = $enumTypes = [];
+
 
 		foreach ($fieldList as $database => $fields) {
 			foreach ($fields as $field) {
@@ -59,15 +58,18 @@ class ClassGenerator extends FileGenerator
 
 				if (in_array($type, array_values(ClassField::TYPES_ASSOC))) {
 					$assigned[$name] = $field->getCanBeNull() || $field->getPrimary();
+					$assignedToType[$name] = ['name' => $name, 'type' => $type, 'canBeNull' => $assigned[$name]];
 				} elseif ($field->getEnumGenerator() !== null) {
 					$assigned[$name] = $field->getCanBeNull();
 					$enumTypes[$name] = "\\" . $field->getEnumGenerator()->getNamespace() . "\\" . $field->getEnumGenerator()->getClassName();
+					$assignedToType[$name] = ['name' => $name, 'type' => $enumTypes[$name], 'canBeNull' => $assigned[$name]];
 				} else {
 					$nullElements[] = $field->getName() . "List";
 				}
 
 				if (in_array($type, ["\\" . DateTime::class])) {
 					$specialTypes[$name] = $type;
+					$assignedToType[$name] = ['name' => $name, 'type' => $type, 'canBeNull' => $field->getCanBeNull()];
 				}
 
 				if ($field->getLink() != null && in_array($type, array_values(ClassField::TYPES_ASSOC))) {
@@ -82,7 +84,34 @@ class ClassGenerator extends FileGenerator
 		foreach ($nullElements as $name) {
 			$this->addContentLine("\$this->$name = null;", 2);
 		}
+		/*usort($assignedToType, function ($e1, $e2) {
+			if (!$e1['canBeNull'] && $e2['canBeNull']) {
+				return -1;
+			} elseif ($e1['canBeNull'] && !$e2['canBeNull']) {
+				return 1;
+			} else {
+				return 0;
+			}
+		});*/
+		$stringParameters = [];
+		foreach ($assignedToType as $item) {
+			$str = $item['type'] . " $" . $item['name'];
+			if ($item['canBeNull']) {
+				$str = "?$str = null";
+			}
+			$stringParameters[] = $str;
+		}
 		$this
+			->addContentLine("}", 1)
+			->addBlankLine()
+			->addContentLine("public static function create(" . implode(', ', $stringParameters) . "): self", 1)
+			->addContentLine("{", 1)
+			->addContentLine("\$obj = new static();", 2);
+		foreach ($assigned as $name => $canBeNull) {
+			$this->addContentLine("\$obj->$name = $$name;", 2);
+		}
+		$this
+			->addContentLine("return \$obj;", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public static function __create(array \$params): self", 1)
