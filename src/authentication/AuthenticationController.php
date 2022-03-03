@@ -3,17 +3,17 @@
 namespace Zaacom\authentication;
 
 use Zaacom\attributes\enum\AllowPermissionEnum;
+use Zaacom\controllers\BaseController;
 use Zaacom\routing\Route;
-use Zaacom\routing\RouteMethodEnum;
 use Zaacom\routing\Router;
 use Zaacom\session\USession;
 
-abstract class AuthenticationController implements AuthentificationInterface
+abstract class AuthenticationController extends BaseController implements AuthentificationInterface
 {
 	/**
 	 * @return AllowPermissionEnum[]
 	 */
-	public static function permission(): ?array
+	public static function permission(): array
 	{
 		return USession::getOrCreate('framework_permissions', []);
 	}
@@ -50,7 +50,7 @@ abstract class AuthenticationController implements AuthentificationInterface
 		self::disconnect();
 	}
 
-	static function redirectTo(Route $baseroute): void
+	static function redirectTo(Route $route): void
 	{
 		Router::redirectToUrl("/");
 	}
