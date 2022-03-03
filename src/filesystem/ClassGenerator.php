@@ -10,8 +10,8 @@ use Zaacom\helper\DateTime;
 use Zaacom\models\BaseModel;
 use Zaacom\models\ClassBuilder;
 use Zaacom\models\ClassField;
+use Zaacom\models\DataBase;
 use Zaacom\models\QueryDelete;
-use Zaacom\models\QueryInsert;
 use Zaacom\models\QueryUpdate;
 
 
@@ -84,7 +84,7 @@ class ClassGenerator extends FileGenerator
 		foreach ($nullElements as $name) {
 			$this->addContentLine("\$this->$name = null;", 2);
 		}
-		/*usort($assignedToType, function ($e1, $e2) {
+		usort($assignedToType, function ($e1, $e2) {
 			if (!$e1['canBeNull'] && $e2['canBeNull']) {
 				return -1;
 			} elseif ($e1['canBeNull'] && !$e2['canBeNull']) {
@@ -92,7 +92,7 @@ class ClassGenerator extends FileGenerator
 			} else {
 				return 0;
 			}
-		});*/
+		});
 		$stringParameters = [];
 		foreach ($assignedToType as $item) {
 			$str = $item['type'] . " $" . $item['name'];
@@ -172,16 +172,16 @@ class ClassGenerator extends FileGenerator
 
 	public function addStaticFields(array $fieldsArray)
 	{
-		$primaryKeys = [];
+		$primaryKey = "";
 		foreach ($fieldsArray as $fields) {
 			foreach ($fields as $field) {
 				if ($field->getPrimary()) {
-					$primaryKeys[] = "self::" . strtoupper($field->getName());
+					$primaryKey = "self::" . strtoupper($field->getName());
 				}
 			}
 		}
 
-		$this->addContentLine("const PRIMARY_KEYS = [" . implode(',', $primaryKeys) . "];", 1);
+		$this->addContentLine("const PRIMARY_KEY = " . $primaryKey . ";", 1);
 
 		foreach ($fieldsArray as $fields) {
 			foreach ($fields as $field) {
@@ -328,12 +328,14 @@ class ClassGenerator extends FileGenerator
 
 	public function addInterfaceFunction(array $fieldList)
 	{
+		$primary = "";
 		$fieldsStaticToNoStatic = $fieldsIdsStaticToNoStatic = $fieldsIdsKeyValue = [];
 		foreach ($fieldList as $fields) {
 			foreach ($fields as $field) {
 				if (in_array($field->getType(), array_values(ClassField::TYPES_ASSOC))) {
 					$fieldsStaticToNoStatic[] = "self::" . strtoupper($field->getName()) . " => " . ($field->getColumnType() == "tinyint(1)" ? "\$this->" . $field->getName() . " ? 1 : 0" : "\$this->" . $field->getName());
 					if ($field->getPrimary()) {
+						$primary = $field->getName();
 						$fieldsIdsStaticToNoStatic[] = "self::" . strtoupper($field->getName()) . " => \$this->" . $field->getName();
 						$fieldsIdsKeyValue[] = "[self::" . strtoupper($field->getName()) . ", \$this->" . $field->getName() . "]";
 					}
@@ -350,15 +352,14 @@ class ClassGenerator extends FileGenerator
 			->addContentLine("public function save(): bool", 1)
 			->addContentLine("{", 1)
 			->addContentLine("\$dataSave = [" . implode(", ", $fieldsStaticToNoStatic) . "];", 2)
-			->addContentLine("\$idsIsNull = false;", 2)
-			->addContentLine("foreach (array_filter(\$dataSave, function (\$k) {", 2)
-			->addContentLine("return in_array(\$k, self::PRIMARY_KEYS);", 3)
-			->addContentLine("}, ARRAY_FILTER_USE_KEY) as \$value) {", 2)
-			->addContentLine("if (\$value === null) {", 3)
-			->addContentLine("\$idsIsNull = true;", 4)
+			->addContentLine("if (\$dataSave[self::PRIMARY_KEY] == null) {", 2)
+			->addContentLine("if (\Zaacom\models\QueryInsert::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->execute()->successExecuteRequest) {", 3)
+			->addContentLine("\$this->$primary = \\" . DataBase::class . "::getLastInsertId(self::DATABASE);", 4)
+			->addContentLine("return true;", 4)
 			->addContentLine("}", 3)
+			->addContentLine("return false;", 3)
 			->addContentLine("}", 2)
-			->addContentLine("return \$idsIsNull ? \\" . QueryInsert::class . "::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->execute()->successExecuteRequest : \\" . QueryUpdate::class . "::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->where([" . implode(", ", $fieldsIdsKeyValue) . "])->limit(1)->execute()->successExecuteRequest;", 2)
+			->addContentLine("return \\" . QueryUpdate::class . "::create(self::DATABASE)->setTable(self::TABLE)->setValues(\$dataSave)->where([" . implode(", ", $fieldsIdsKeyValue) . "])->limit(1)->execute()->successExecuteRequest;", 2)
 			->addContentLine("}", 1)
 			->addBlankLine()
 			->addContentLine("public function delete(): bool", 1)

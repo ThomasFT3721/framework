@@ -8,12 +8,9 @@ namespace Zaacom\models;
  */
 interface Model
 {
-	/**
-	 * @param mixed ...$ids test
-	 */
-	public static function findById(mixed ...$ids): self|false;
+	public static function findById(int $id): self|false;
 
-	public static function findByIdOrFail(mixed ...$ids): self;
+	public static function findByIdOrFail(int $id): self;
 
 	public static function __create(array $params): self;
 
