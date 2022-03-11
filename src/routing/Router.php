@@ -26,6 +26,11 @@ abstract class Router
 	private static array $routes = [];
 	private static ?Route $currentRoute = null;
 
+	public static function getCurrentRoute(): Route
+	{
+		return self::$currentRoute;
+	}
+
 	public static function add(RouteMethodEnum $method, string $path, array|string $action, array $allowed): Route
 	{
 		$route = new Route($method, $path, $action, $allowed);
