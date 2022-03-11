@@ -8,7 +8,7 @@ use Zaacom\routing\Route;
 use Zaacom\routing\Router;
 use Zaacom\session\USession;
 
-abstract class AuthenticationController extends BaseController implements AuthentificationInterface
+abstract class AuthenticationController extends BaseController implements AuthenticationInterface
 {
 	/**
 	 * @return AllowPermissionEnum[]
