@@ -138,6 +138,17 @@ class DataBase
     }
 
 	/**
+	 * @param string $database
+	 *
+	 * @return int id du dernier élément inséré dans la BDD
+	 * @throws Exception
+	 */
+	public static function getLastInsertId(string $database): int
+	{
+		return self::getBdd($database)->lastInsertId();
+	}
+
+	/**
 	 * Renvoie un objet de connexion à la BDD en initialisant la connexion au besoin
 	 *
 	 * @return PDO Objet PDO de connexion à la BDD
