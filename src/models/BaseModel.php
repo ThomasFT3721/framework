@@ -14,7 +14,7 @@ abstract class BaseModel implements Model
 
 
 
-	public static function findById(int $id): static|false
+	public static function findById(int $id): static|null
 	{
 		return \Zaacom\models\QuerySelect::create(static::DATABASE)->from(static::TABLE)->where(static::PRIMARY_KEY, $id)->get(static::class);
 	}

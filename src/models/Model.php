@@ -8,7 +8,7 @@ namespace Zaacom\models;
  */
 interface Model
 {
-	public static function findById(int $id): self|false;
+	public static function findById(int $id): self|null;
 
 	public static function findByIdOrFail(int $id): self;
 
