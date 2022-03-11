@@ -14,4 +14,7 @@ interface AuthenticationInterface
 
 	#[Route(path: '/logout', name: 'framework_logout', method: RouteMethodEnum::POST)]
 	public static function logoutPage();
+
+	#[Route(path: '/register', name: 'framework_register', method: RouteMethodEnum::GET)]
+	public static function registerPage();
 }
