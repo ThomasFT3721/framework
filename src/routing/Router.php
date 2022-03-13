@@ -14,7 +14,7 @@ use Zaacom\exception\InvalidNumberArgumentsException;
 use Zaacom\exception\RouteMethodNotFoundException;
 use Zaacom\exception\RouteNotFoundException;
 use Zaacom\exception\UnknownRouteException;
-use Zaacom\session\USession;
+use Zaacom\accessor\ZSession;
 
 
 /**
@@ -215,14 +215,14 @@ abstract class Router
 		if (self::$currentRoute === null) {
 			throw new UnknownRouteException($url);
 		}
-		USession::set('framework_permissions', []);
+		ZSession::set('framework_permissions', []);
 		$canAccess = false;
 		if (!empty(self::$currentRoute->getAllowed())) {
 			if (AuthenticationController::user() !== null) {
 				$canAccess = true;
 				if (array_key_exists(AuthenticationController::role(), self::$currentRoute->getAllowed())) {
 					$canAccess = true;
-					USession::set('framework_permissions', self::$currentRoute->getAllowed()[AuthenticationController::role()]);
+					ZSession::set('framework_permissions', self::$currentRoute->getAllowed()[AuthenticationController::role()]);
 				} else {
 					$canAccess = false;
 				}

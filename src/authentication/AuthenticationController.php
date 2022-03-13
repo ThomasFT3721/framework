@@ -6,7 +6,7 @@ use Zaacom\attributes\enum\AllowPermissionEnum;
 use Zaacom\controllers\BaseController;
 use Zaacom\routing\Route;
 use Zaacom\routing\Router;
-use Zaacom\session\USession;
+use Zaacom\accessor\ZSession;
 
 abstract class AuthenticationController extends BaseController implements AuthenticationInterface
 {
@@ -15,34 +15,34 @@ abstract class AuthenticationController extends BaseController implements Authen
 	 */
 	public static function permission(): array
 	{
-		return USession::getOrCreate('framework_permissions', []);
+		return ZSession::getOrCreate('framework_permissions', []);
 	}
 
 	public static function role(): mixed
 	{
-		return USession::getOrCreate('framework_role');
+		return ZSession::getOrCreate('framework_role');
 	}
 
 	public static function user()
 	{
-		return USession::getOrCreate('framework_user');
+		return ZSession::getOrCreate('framework_user');
 	}
 
 	public static function isConnected(): bool
 	{
-		return USession::getOrCreate('framework_user') !== null;
+		return ZSession::getOrCreate('framework_user') !== null;
 	}
 
 	private static function disconnect()
 	{
-		USession::set('framework_role', null);
-		USession::set('framework_user', null);
+		ZSession::set('framework_role', null);
+		ZSession::set('framework_user', null);
 	}
 
 	protected static function connect(mixed $user, mixed $role)
 	{
-		USession::set('framework_role', $role);
-		USession::set('framework_user', $user);
+		ZSession::set('framework_role', $role);
+		ZSession::set('framework_user', $user);
 	}
 
 	public static function logout()

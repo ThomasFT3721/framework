@@ -1,14 +1,14 @@
 <?php
 
-namespace Zaacom\session;
+namespace Zaacom\accessor;
 
-class USession
+class ZSession
 {
-	public array $data = [];
+	private array $data = [];
 
 	private function __construct() { }
 
-	private static $key = "framework_zaacom";
+	private static string $key = "framework_zaacom";
 
 	public static function get(int|string $key): mixed
 	{
@@ -17,7 +17,7 @@ class USession
 		}
 		return self::getData()[$key];
 	}
-	
+
 	public static function getOrCreate(int|string $key, mixed $elseValue = null): mixed
 	{
 		if (!array_key_exists($key, self::getData())) {
