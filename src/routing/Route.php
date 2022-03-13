@@ -12,7 +12,7 @@ class Route
 {
 
 	private RouteMethodEnum $method;
-	private string $path;
+	public string $path;
 	public array|string $action;
 	public ?string $name = null;
 	public ?array $middlewares = null;
