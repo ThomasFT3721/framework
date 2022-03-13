@@ -13,4 +13,21 @@ enum RouteMethodEnum
 	case PUT;
 	case DELETE;
 	case PATCH;
+
+	/**
+	 * @param string $name
+	 *
+	 * @return RouteMethodEnum
+	 */
+	public static function get(string $name): RouteMethodEnum
+	{
+		return match ($name) {
+			'POST' => RouteMethodEnum::POST,
+			'GET' => RouteMethodEnum::GET,
+			'PUT' => RouteMethodEnum::PUT,
+			'DELETE' => RouteMethodEnum::DELETE,
+			'PATCH' => RouteMethodEnum::PATCH,
+			default => null,
+		};
+	}
 }

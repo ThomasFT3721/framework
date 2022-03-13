@@ -4,6 +4,7 @@ namespace Zaacom\routing;
 
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
+use Zaacom\accessor\ZSession;
 use Zaacom\attributes\Controller;
 use Zaacom\attributes\enum\AllowPermissionEnum;
 use Zaacom\authentication\AuthenticationController;
@@ -14,7 +15,6 @@ use Zaacom\exception\InvalidNumberArgumentsException;
 use Zaacom\exception\RouteMethodNotFoundException;
 use Zaacom\exception\RouteNotFoundException;
 use Zaacom\exception\UnknownRouteException;
-use Zaacom\accessor\ZSession;
 
 
 /**
@@ -34,7 +34,7 @@ abstract class Router
 	public static function add(RouteMethodEnum $method, string $path, array|string $action, array $allowed): Route
 	{
 		$route = new Route($method, $path, $action, $allowed);
-		self::$routes[$path] = $route;
+		self::$routes[$method->name . $path] = $route;
 		return $route;
 	}
 
@@ -183,7 +183,7 @@ abstract class Router
 						$allows[$role][] = AllowPermissionEnum::from($i);
 					}
 				}
-				$r = Route::{strtolower($item['methodString'])}($path, $item['action'], $allows);
+				$r = Route::{strtolower($item['methodString'])}($item['path'], $item['action'], $allows);
 				if (!empty($item['name'])) {
 					$r->name($item['name']);
 				}
@@ -204,7 +204,7 @@ abstract class Router
 	{
 		self::includeRoutes();
 		$params = [];
-		foreach (self::$routes as $r) {
+		foreach (self::getRoutes(RouteMethodEnum::get($_SERVER['REQUEST_METHOD'] ?? 'GET')) as $r) {
 			if (($matched = $r->matchWith($url)) !== false) {
 				self::$currentRoute = $r;
 				$params = $matched;
