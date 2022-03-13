@@ -48,6 +48,7 @@ class ViewHandler
 		if ($base_file !== null) {
 			$context['_base_file'] = $twig->load($base_file);
 		}
+		$context['_route'] = Router::getCurrentRoute();
 		$context['_page_title'] = $page_title;
 		$twig->display($name, $context);
 
