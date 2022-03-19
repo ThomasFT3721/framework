@@ -28,7 +28,7 @@ abstract class Router
 
 	public static function getCurrentRoute(): Route
 	{
-		return self::$currentRoute;
+		return self::$currentRoute ?? new Route(RouteMethodEnum::GET, "/error", [], []);
 	}
 
 	public static function add(RouteMethodEnum $method, string $path, array|string $action, array $allowed): Route

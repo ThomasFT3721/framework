@@ -11,6 +11,7 @@ use Zaacom\models\ClassBuilder;
 use Zaacom\models\ClassField;
 use Zaacom\models\ClassFieldLink;
 use Zaacom\models\DataBase;
+use Zaacom\routing\RouteMethodEnum;
 use Zaacom\views\ViewHandler;
 
 
@@ -36,7 +37,7 @@ class ClassGeneratorController extends BaseController
 		return ViewHandler::render("/models/index.twig", "Generate class", ["classList" => $classList], "framework_base.twig");
 	}
 
-	#[Route(path: '/zf-admin/Objects/generate', name: 'object_generator_generate')]
+	#[Route(path: '/zf-admin/Objects/generate', name: 'object_generator_generate', method: RouteMethodEnum::POST)]
 	public function generate()
 	{
 		$databases = EnvironmentVariable::get(EnvironmentVariablesIdentifiers::DB_DATABASES);
